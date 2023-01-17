@@ -18,6 +18,8 @@ add_executable(yoav_roy_ass4_repo
         vecComparator.h
         vectorsDataStruct.cpp
         vectorsDataStruct.h
+        vectorData.cpp
+        vectorData.h
         validations.cpp
         validations.h
-        server.cpp)
+        server.cpp vectorData.cpp connectionUtil.cpp)
