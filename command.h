@@ -8,7 +8,7 @@
 using namespace std;
 
 /**
- * THis is the abstract father-class which holds a description and a DefaultIO
+ * This is the abstract father-class which holds a description and a DefaultIO
  */
 class command {
 protected:
@@ -22,6 +22,9 @@ public:
     virtual ~command() = default;
 
     virtual void execute() = 0;
+
+    virtual string getDes() = 0;
+
 };
 
 /**
@@ -35,6 +38,8 @@ public:
     ~update() override = default;
 
     void execute() override;
+
+    string getDes() override;
 };
 
 /**
@@ -48,6 +53,9 @@ public:
     ~algoSettings() override = default;
 
     void execute() override;
+
+    string getDes() override;
+
 };
 
 /**
@@ -61,6 +69,9 @@ public:
     ~classify() override = default;
 
     void execute() override;
+
+    string getDes() override;
+
 };
 
 /**
@@ -74,6 +85,9 @@ public:
     ~results() override = default;
 
     void execute() override;
+
+    string getDes() override;
+
 };
 
 /**
@@ -87,6 +101,9 @@ public:
     ~download() override = default;
 
     void execute() override;
+
+    string getDes() override;
+
 };
 
 /**
@@ -100,6 +117,9 @@ public:
     ~exitProg() override = default;
 
     void execute() override;
+
+    string getDes() override;
+
 };
 
 #endif //SERVER_CPP_COMMAND_H
