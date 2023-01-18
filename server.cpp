@@ -159,6 +159,7 @@ void acceptVector(int port, string file) {
         int client_sock = connectClient(sock);
         while (true) {
             char buffer[BUFFERSIZE] = "\0";
+            int client_sock = connectClient(sock);
             int expected_data_len = sizeof(buffer);
             int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
 
@@ -170,9 +171,10 @@ void acceptVector(int port, string file) {
                 break;
             } else {
                 if (strcmp(buffer, "-1") == 0) {
-                    break;
+                   break;
                 }
             }
+
             // classify
             string tmpClassification = classify(buffer, file, read_bytes);
             // converting to buffer
@@ -186,17 +188,62 @@ void acceptVector(int port, string file) {
         }
     }
 }
+bool acceptFromClient(int sock,char* &buffer) {
+    int client_sock = connectClient(sock);
+        int expected_data_len = sizeof(buffer);
+        int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
 
+        if (read_bytes == 0) {
+            cout << "connection is closed" << endl;
+            return false;
+        } else if (read_bytes < 0) {
+            cout << "problem with connection" << endl;
+            return false;
+        } else {
+            if (strcmp(buffer, "-1") == 0) {
+                return false;
+            }
+        }
+
+}
+
+void makeConnection(int port){
+    bool flag = false;
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        cout << "error creating socket" << endl;
+        exit(1);
+    }
+    struct sockaddr_in sin;
+    memset(&sin, 0, sizeof(sin));
+    sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_port = htons(port);
+    //bind
+    if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
+        cout << "error binding socket" << endl;
+        exit(1);
+    }
+    if (listen(sock, 5) < 0) {
+        cout << "error listening to a socket" << endl;
+        exit(1);
+    }
+}
 /**
  * This is the main function of server
  */
 int main(int argc, char *argv[]) {
-    const string file_name = argv[1];
-    if (!check_valid_port(argv[2])) {
+    //const string file_name = argv[1];
+    if (!check_valid_port(argv[1])) {
         cout << "Invalid Input" << endl;
         exit(1);
     }
-    const int server_port = stoi(argv[2]);
-    acceptVector(server_port, file_name);
+    const int server_port = stoi(argv[1]);
+    makeConnection(server_port);
+    
+
+
+
+    //acceptVector(server_port, file_name);
     return 0;
 }
