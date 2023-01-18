@@ -90,22 +90,22 @@ string exitProg::getDes() { return this->description; }
 
 void update::execute(ShareData *data) {
 
-    string trainCSV;
-    string testCSV;
-
     dio->write("Please upload your local train CSV file.\n");
-    trainCSV = dio->read();
+    data->setUnClassifiedData(dio->read());
     dio->write("Upload complete.\n");
     dio->write("Please upload your local test CSV file.\n");
-    testCSV = dio->read();
+    data->setClassifiedData(dio->read());
     dio->write("Upload complete.\n");
 
 }
 
 void algoSettings::execute(ShareData *data) {
-    //TODO - do an object to hold k and metric
-    dio->write("The current KNN parameters are: k = " + k + ", distance metric = " + metric + ".\n");
+    string k = to_string(data->getK());
+    dio->write("The current KNN parameters are: k = " + k + ", distance metric = " + data->getMetric() + ".\n");
+    if (!dio->read().empty()) {
+        //TODO - need to check that the input is valid
 
+    }
 }
 
 void classify::execute(ShareData *data) {

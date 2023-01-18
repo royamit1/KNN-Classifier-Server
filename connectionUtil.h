@@ -1,6 +1,3 @@
-//
-// Created by yoav on 1/17/23.
-//
 
 #ifndef YOAV_ROY_ASS4_REPO_CONNECTIONUTIL_H
 #define YOAV_ROY_ASS4_REPO_CONNECTIONUTIL_H
@@ -34,33 +31,59 @@ public:
     virtual ~DefaultIO() = default;
 };
 
-
-class SocketIO : public DefaultIO{
-    int sock;
+class SocketIO : public DefaultIO {
 public:
     void setSock(int sock);
+
     string read() override;
+
     void write(string s) override;
+
     ~SocketIO() override = default;
-    SocketIO()=default;
-};
-class StandardIO : public DefaultIO{
-public:
-    string read() override;
-    void write(string s) override;
-    ~StandardIO() override = default;
-    StandardIO()=default;
+
+    SocketIO() = default;
 };
 
-class ShareData{
+class StandardIO : public DefaultIO {
+public:
+    string read() override;
+
+    void write(string s) override;
+
+    ~StandardIO() override = default;
+
+    StandardIO() = default;
+};
+
+class ShareData {
 private:
     string classifiedData;
     string unClassifiedData;
+    int k = 5;
+    string metric = "AUC";
+
 public:
-    string getClassifiedData();
-    void setclassifiedData(string C);
-    string getUnClassifiedData();
-    void setUnClassifiedData(string S);
+
+    ShareData() = default;
+
+    string getClassifiedData() const;
+
+    void setClassifiedData(string C);
+
+    string getUnClassifiedData() const;
+
+    void setUnClassifiedData(string C);
+
+    int getK() const;
+
+    void setK(int k);
+
+    string getMetric() const;
+
+    void setMetric(string metric);
+
 };
+
 string convertCharToString(char *a, int size);
+
 #endif //YOAV_ROY_ASS4_REPO_CONNECTIONUTIL_H
