@@ -8,7 +8,7 @@
 using namespace std;
 
 /**
- *
+ * THis is the abstract father-class which holds a description and a DefaultIO
  */
 class command {
 protected:
@@ -25,12 +25,12 @@ public:
 };
 
 /**
- *
+ * This is the update class - option 1
  */
 class update : public command {
 
 public:
-    update(DefaultIO *dio);
+    explicit update(DefaultIO *dio);
 
     ~update() override = default;
 
@@ -38,14 +38,12 @@ public:
 };
 
 /**
- *
+ * This is the algoSettings class - option 3
  */
 class algoSettings : public command {
 
-    string description;
-
 public:
-    algoSettings(DefaultIO *dio);
+    explicit algoSettings(DefaultIO *dio);
 
     ~algoSettings() override = default;
 
@@ -53,14 +51,12 @@ public:
 };
 
 /**
- *
+ * This is the classify class - option 3
  */
 class classify : public command {
 
-    string description;
-
 public:
-    classify(DefaultIO *dio);
+    explicit classify(DefaultIO *dio);
 
     ~classify() override = default;
 
@@ -68,14 +64,12 @@ public:
 };
 
 /**
- *
+ * This is the results class - option 4
  */
 class results : public command {
 
-    string description;
-
 public:
-    results(DefaultIO *dio);
+    explicit results(DefaultIO *dio);
 
     ~results() override = default;
 
@@ -83,14 +77,12 @@ public:
 };
 
 /**
- *
+ * This is the download class - option 5
  */
 class download : public command {
 
-    string description;
-
 public:
-    download(DefaultIO *dio);
+    explicit download(DefaultIO *dio);
 
     ~download() override = default;
 
@@ -98,16 +90,14 @@ public:
 };
 
 /**
- *
+ * This is the exitProg class - option 8
  */
-class exit : public command {
-
-    string description;
+class exitProg : public command {
 
 public:
-    exit(DefaultIO *dio);
+    explicit exitProg(DefaultIO *dio);
 
-    ~exit() override = default;
+    ~exitProg() override = default;
 
     void execute() override;
 };
