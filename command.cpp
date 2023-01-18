@@ -9,7 +9,7 @@ using namespace std;
 /**
  * This is the constructor for command - the father class
  * @param dio - DefaultIO object
- * @param description - the description of the ccommand
+ * @param description - the description of the command
  */
 command::command(DefaultIO *dio, string description) {
     this->dio = dio;
@@ -85,16 +85,47 @@ exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
  */
 string exitProg::getDes() { return this->description; }
 
+
 // execute for each command
 
-void update::execute() {}
+void update::execute(ShareData *data) {
 
-void algoSettings::execute() {}
+    string trainCSV;
+    string testCSV;
 
-void classify::execute() {}
+    dio->write("Please upload your local train CSV file.\n");
+    trainCSV = dio->read();
+    dio->write("Upload complete.\n");
+    dio->write("Please upload your local test CSV file.\n");
+    testCSV = dio->read();
+    dio->write("Upload complete.\n");
 
-void results::execute() {}
+}
 
-void download::execute() {}
+void algoSettings::execute(ShareData *data) {
+    //TODO - do an object to hold k and metric
+    dio->write("The current KNN parameters are: k = " + k + ", distance metric = " + metric + ".\n");
 
-void exitProg::execute() {}
+}
+
+void classify::execute(ShareData *data) {
+
+    dio->write("classifying data complete.\n");
+    dio->write("please upload data.\n");
+
+}
+
+void results::execute(ShareData *data) {
+
+    dio->write("please upload data.\n");
+    dio->write("please classify the data.\n");
+
+}
+
+void download::execute(ShareData *data) {
+
+}
+
+void exitProg::execute(ShareData *data) {
+
+}

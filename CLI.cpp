@@ -20,7 +20,7 @@ CLI::CLI(DefaultIO *dio) {
  * This is the destructor
  */
 CLI::~CLI() {
-    for (auto & command : commands) {
+    for (auto &command: commands) {
         delete command;
     }
 }
@@ -29,7 +29,21 @@ CLI::~CLI() {
  * This function presents the selection options to the user
  */
 void CLI::start() {
+    string strInput;
+    int intInput;
+    ShareData data;
+    dio->write("Welcome to the KNN Classifier Server. Please choose an option:\n");
+    int i=0;
+    while (commands[i]->getDes()[0] != '8') {
+        for (int j = 0; j < 6; ++j) {
+            dio->write(commands[j]->getDes() + "\n");
+        }
+        strInput = dio->read();
+        if ((strInput >= "1" || strInput <= "5") || strInput == "8") {
+            intInput = stoi(strInput);
+            commands[intInput]->execute(&data);
+        }
 
-
-
+        //TODO - the server returns "invalid input" and go back to main menu
+    }
 }
