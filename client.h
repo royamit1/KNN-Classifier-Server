@@ -2,7 +2,7 @@
 #define YOAV_ROY_ASS3_REPO_CLIENT_H
 
 #include <string>
-
+#include "validations.h"
 using namespace std;
 
 bool check_valid_part_ip(char *partIp);

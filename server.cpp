@@ -8,7 +8,9 @@
 #include <bits/stdc++.h>
 #include "validations.h"
 #include "vectorData.h"
-
+#include <thread>
+#include "CLI.h"
+#include "connectionUtil.h"
 #define BUFFERSIZE 4096
 #define ERROR "invalid input"
 
@@ -188,26 +190,26 @@ void acceptVector(int port, string file) {
         }
     }
 }
-bool acceptFromClient(int sock,char* &buffer) {
-    int client_sock = connectClient(sock);
-        int expected_data_len = sizeof(buffer);
-        int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
+//bool acceptFromClient(int sock,char* &buffer) {
+//    int client_sock = connectClient(sock);
+//        int expected_data_len = sizeof(buffer);
+//        int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
+//
+//        if (read_bytes == 0) {
+//            cout << "connection is closed" << endl;
+//            return false;
+//        } else if (read_bytes < 0) {
+//            cout << "problem with connection" << endl;
+//            return false;
+//        } else {
+//            if (strcmp(buffer, "-1") == 0) {
+//                return false;
+//            }
+//        }
+//
+//}
 
-        if (read_bytes == 0) {
-            cout << "connection is closed" << endl;
-            return false;
-        } else if (read_bytes < 0) {
-            cout << "problem with connection" << endl;
-            return false;
-        } else {
-            if (strcmp(buffer, "-1") == 0) {
-                return false;
-            }
-        }
-
-}
-
-void makeConnection(int port){
+int makeConnection(int port){
     bool flag = false;
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -228,6 +230,18 @@ void makeConnection(int port){
         cout << "error listening to a socket" << endl;
         exit(1);
     }
+    return sock;
+}
+void handleThread(int id){
+    SocketIO newSock;
+    newSock.setSock(id);
+    CLI currentCli(&newSock);
+    currentCli.start();
+}
+void handleInoutThread(int id){
+    StandardIO newS;
+    CLI currentCli(&newS);
+    currentCli.start();
 }
 /**
  * This is the main function of server
@@ -239,11 +253,10 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     const int server_port = stoi(argv[1]);
-    makeConnection(server_port);
-    
-
-
-
+    //int sock=makeConnection(server_port);
+    //handleThread(sock);
+    //thread t(handleThread,1);
     //acceptVector(server_port, file_name);
+    handleInoutThread(1);
     return 0;
 }
