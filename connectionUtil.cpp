@@ -73,22 +73,22 @@ string ShareData::getMetric() const {
     return this->metric;
 }
 
-void ShareData::setMetric(string metric) {
-    this->metric = metric;
+void ShareData::setMetric(string met) {
+    this->metric = met;
 }
 
-vector<classifiedVector> ShareData::getAllClassVec() const {
+vector<classifiedVector *> ShareData::getAllClassVec() const {
     return this->allClassVec;
 }
 
-void ShareData::setAllClassVec(vector<classifiedVector> allClassVec) {
-    this->allClassVec = allClassVec;
+void ShareData::setAllClassVec(vector<classifiedVector *> allClsVec) {
+    this->allClassVec = allClsVec;
 }
 
-vector<classifiedVector> ShareData::getAllUnClassVec() const {
+vector<classifiedVector *> ShareData::getAllUnClassVec() const {
     return this->allUnClassVec;
 }
 
-void ShareData::setAllUnClassVec(vector <classifiedVector> allUnClassVec) {
-    this->allUnClassVec = allUnClassVec;
+void ShareData::setAllUnClassVec(vector <classifiedVector *> allUnClsVec) {
+    this->allUnClassVec = allUnClsVec;
 }

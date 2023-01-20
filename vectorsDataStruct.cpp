@@ -11,10 +11,10 @@ using namespace std;
  * @param vectorsHeap all the classified vectors for the data structure
  */
 vectorsDataStruct::vectorsDataStruct(disVector &structureVector,
-                                     vector<classifiedVector> vectorsHeap) {
+                                     vector<classifiedVector *> vectorsHeap) {
     this->structureVector = structureVector;
     updateDistances(vectorsHeap);
-    make_heap(vectorsHeap.begin(), vectorsHeap.end(), vecComparator());
+    make_heap(*vectorsHeap.begin(), *vectorsHeap.end(), vecComparator());
     this->vectorsHeap = vectorsHeap;
 }
 
@@ -22,15 +22,14 @@ vectorsDataStruct::vectorsDataStruct(disVector &structureVector,
  * updates the distances from the user vector of all the vectors in the heap
  * @param vectorsHeap the vectors in the data
  */
-void vectorsDataStruct::updateDistances(vector<classifiedVector> &vectorsHeap) {
-    for (int i = 0; i < vectorsHeap.size(); ++i) {
+void vectorsDataStruct::updateDistances(vector<classifiedVector *> &vectorsHeap) {
+    for (auto & i : vectorsHeap) {
         // get the current vector
-        classifiedVector &currentVector = vectorsHeap.at(i);
         // get the distance
         double currentDistance =
-                structureVector.checkVectorDistance(currentVector.getCurrVec());
+                structureVector.checkVectorDistance(i->getCurrVec());
         // setting the distance
-        currentVector.setDistance(currentDistance);
+        i->setDistance(currentDistance);
     }
 }
 
@@ -40,7 +39,7 @@ void vectorsDataStruct::updateDistances(vector<classifiedVector> &vectorsHeap) {
  * @return the vector at the requested index
  */
 classifiedVector vectorsDataStruct::at(int index) {
-    return vectorsHeap.at(index);
+    return *vectorsHeap.at(index);
 }
 
 /**
@@ -48,12 +47,12 @@ classifiedVector vectorsDataStruct::at(int index) {
  * @param k the amount of vectors
  * @return k smallest vectors
  */
-vector<classifiedVector> vectorsDataStruct::getK(int k) {
-    vector<classifiedVector> kSmallestVectors;
+vector<classifiedVector *> vectorsDataStruct::getK(int k) {
+    vector<classifiedVector *> kSmallestVectors;
     for (int i = 0; i < k; i++) {
         kSmallestVectors.push_back(vectorsHeap.at(0));
-        pop_heap(vectorsHeap.begin(),
-                 vectorsHeap.end() - i, vecComparator());
+        pop_heap(*vectorsHeap.begin(),
+                 *vectorsHeap.end() - i, vecComparator());
     }
     return kSmallestVectors;
 }

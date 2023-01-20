@@ -62,8 +62,8 @@ class ShareData {
 private:
     string classifiedData;
     string unClassifiedData;
-    vector<classifiedVector> allClassVec;
-    vector<classifiedVector> allUnClassVec;
+    vector<classifiedVector *> allClassVec;
+    vector<classifiedVector *> allUnClassVec;
     int k = 5;
     string metric = "AUC";
 
@@ -87,13 +87,13 @@ public:
 
     void setMetric(string metric);
 
-    vector<classifiedVector> getAllClassVec() const;
+    vector<classifiedVector *> getAllClassVec() const;
 
-    void setAllClassVec(vector<classifiedVector> allClassVec);
+    void setAllClassVec(vector<classifiedVector *> allClassVec);
 
-    vector<classifiedVector> getAllUnClassVec() const;
+    vector<classifiedVector *> getAllUnClassVec() const;
 
-    void setAllUnClassVec(vector <classifiedVector> allUnClassVec);
+    void setAllUnClassVec(vector <classifiedVector *> allUnClassVec);
 
 };
 

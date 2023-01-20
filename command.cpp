@@ -102,11 +102,11 @@ void classify::execute(ShareData *data) {
 
     data->setAllClassVec(fileToVec(data->getClassifiedData(), true));
     data->setAllUnClassVec(fileToVec(data->getUnClassifiedData(), false));
-//    for (auto &unClsVec: data->getAllUnClassVec()) {
-//        unClsVec.setClass(getClassification(data->getAllClassVec(), data->getMetric(), data->getK(), unClsVec.getCurrVec()));
-//    }
+
     for (int i = 0; i < data->getAllUnClassVec().size(); ++i) {
-        data->getAllUnClassVec()[i].setClass(getClassification(data->getAllClassVec(), data->getMetric(), data->getK(), data->getAllUnClassVec()[i].getCurrVec()));
+        data->getAllUnClassVec()[i]->setClass(getClassification(data->getAllClassVec(),
+                                                                data->getMetric(), data->getK(),
+                                                                data->getAllUnClassVec()[i]->getCurrVec()));
     }
     dio->write("classifying data complete.");
     dio->write("please upload data.");
@@ -120,7 +120,7 @@ void results::execute(ShareData *data) {
     dio->write("please classify the data.");
     int i = 1;
     for (auto &clsVec: data->getAllUnClassVec()) {
-        dio->write(to_string(i) + "\t" + clsVec.getClass());
+        dio->write(to_string(i) + "\t" + clsVec->getClass());
         i++;
     }
     dio->write("Done.");

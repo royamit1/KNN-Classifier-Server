@@ -11,17 +11,17 @@ class vectorsDataStruct {
 
 private:
     disVector structureVector;
-    vector<classifiedVector> vectorsHeap;
+    vector<classifiedVector *> vectorsHeap;
 
 public:
     vectorsDataStruct(disVector &structureVector,
-                      vector<classifiedVector> vectorsHeap);
+                      vector<classifiedVector *> vectorsHeap);
 
-    void updateDistances(vector<classifiedVector> &vectorsHeap);
+    void updateDistances(vector<classifiedVector *> &vectorsHeap);
 
     classifiedVector at(int index);
 
-    vector<classifiedVector> getK(int k);
+    vector<classifiedVector *> getK(int k);
 
 };
 

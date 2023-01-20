@@ -20,7 +20,7 @@ bool checkSpaces(string vec);
 
 vector<double> fillVectorByDelim(const string &strVec, char delim);
 
-vector<classifiedVector> fileToVec(string file_name, bool flag);
+vector<classifiedVector *> fileToVec(string file_name, bool flag);
 
 string getClass(vector<classifiedVector> nearestVecs);
 
@@ -30,7 +30,7 @@ int checkAlgoSettingsInput(const string &userInput);
 
 bool check_valid_user_input(string userInput, int read_bytes);
 
-string getClassification(vector<classifiedVector> allClassVec,
+string getClassification(vector<classifiedVector *> allClassVec,
                          const string &distance, int neighborsNum, vector<double> newVec);
 
 #endif //YOAV_ROY_ASS3_REPO_VALIDATIONS_H
