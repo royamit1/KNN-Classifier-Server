@@ -15,7 +15,7 @@ void StandardIO::write(string s) {
 
 string StandardIO::read() {
     string x;
-    cin >> x;
+    getline(cin, x);
     return x;
 }
 
@@ -75,4 +75,12 @@ string ShareData::getMetric() const {
 
 void ShareData::setMetric(string metric) {
     this->metric = metric;
+}
+
+vector <classifiedVector> ShareData::getAllClassVec() const {
+    return this->allClassVec;
+}
+
+vector <classifiedVector> ShareData::getAllUnClassVec() const {
+    return this->allUnClassVec;
 }

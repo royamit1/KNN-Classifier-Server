@@ -228,6 +228,45 @@ bool check_valid_dis(string dis) {
 }
 
 /**
+ * This function checks the validation of the user input in option 2
+ * @param userInput - string that contains K and a metric.
+ * @return - 0 if the input is valid, 1 if the k is invalid, 2 if the metric is invalid
+ * and 3 if both are invalid.
+ */
+int checkAlgoSettingsInput(const string &userInput) {
+    size_t first_index = userInput.find_first_of(' ');
+    string newK = userInput.substr(0, first_index - 1);
+    string newDis = userInput.substr(first_index + 1, userInput.length());
+    bool flag = true;
+    int count = 0;
+
+    // two checks for validation of K
+    for (char const &c: newK) {
+        if (isdigit(c) == 0) {
+            flag = false;
+            break;
+        }
+    }
+    if (flag && (newK.length() > 10 || !checkNumber(newK))) {
+        flag = false;
+    }
+
+    // return a different number base on the validation of the input
+    if (!flag && !check_valid_dis(newDis)) {
+        count = 3;
+    } else {
+        if (!flag) {
+            count = 1;
+        }
+        if (!check_valid_dis(newDis)) {
+            count = 2;
+        }
+    }
+    return count;
+}
+
+
+/**
  * This function gets a string of the user input, and checks the validation of every parameter
  * @param userInput - a string of the user input (vector, distance, k)
  * @return if one of the parameters arent valid return false, return true otherwise

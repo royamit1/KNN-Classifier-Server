@@ -26,6 +26,8 @@ string getClass(vector<classifiedVector> nearestVecs);
 
 bool check_valid_dis(string dis);
 
+int checkAlgoSettingsInput(const string &userInput);
+
 bool check_valid_user_input(string userInput, int read_bytes);
 
 string getClassification(vector<classifiedVector> &allClassVec,

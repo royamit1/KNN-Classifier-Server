@@ -1,6 +1,7 @@
 
 #include "command.h"
 #include "connectionUtil.h"
+#include "validations.h"
 
 using namespace std;
 
@@ -16,16 +17,13 @@ command::command(DefaultIO *dio, string description) {
     this->description = description;
 }
 
+string command::getDes() { return this->description; }
+
 /**
  * This is the constructor for update command
  * @param dio - DefaultIO object
  */
 update::update(DefaultIO *dio) : command(dio, "1. upload an unclassified csv data file") {}
-
-/**
- * @return - the description of a command
- */
-string update::getDes() { return this->description; }
 
 
 /**
@@ -34,22 +32,12 @@ string update::getDes() { return this->description; }
  */
 algoSettings::algoSettings(DefaultIO *dio) : command(dio, "2. algorithm settings") {}
 
-/**
- * @return - the description of a command
- */
-string algoSettings::getDes() { return this->description; }
-
 
 /**
  * This is the constructor for classify command
  * @param dio - DefaultIO object
  */
 classify::classify(DefaultIO *dio) : command(dio, "3. classify data") {}
-
-/**
-* @return - the description of a command
-*/
-string classify::getDes() { return this->description; }
 
 
 /**
@@ -58,10 +46,6 @@ string classify::getDes() { return this->description; }
  */
 results::results(DefaultIO *dio) : command(dio, "4. display results") {}
 
-/**
- * @return - the description of a command
- */
-string results::getDes() { return this->description; }
 
 /**
  * This is the constructor for download command
@@ -69,10 +53,6 @@ string results::getDes() { return this->description; }
  */
 download::download(DefaultIO *dio) : command(dio, "5. download results") {}
 
-/**
- * @return - the description of a command
- */
-string download::getDes() { return this->description; }
 
 /**
  * This is the constructor for exitProg command
@@ -80,52 +60,66 @@ string download::getDes() { return this->description; }
  */
 exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
 
-/**
- * @return - the description of a command
- */
-string exitProg::getDes() { return this->description; }
-
 
 // execute for each command
 
 void update::execute(ShareData *data) {
 
-    dio->write("Please upload your local train CSV file.\n");
-    data->setUnClassifiedData(dio->read());
-    dio->write("Upload complete.\n");
-    dio->write("Please upload your local test CSV file.\n");
+    dio->write("Please upload your local train CSV file.");
     data->setClassifiedData(dio->read());
-    dio->write("Upload complete.\n");
+    dio->write("Upload complete.");
+    dio->write("Please upload your local test CSV file.");
+    data->setUnClassifiedData(dio->read());
+    dio->write("Upload complete.");
 
 }
 
 void algoSettings::execute(ShareData *data) {
-    string k = to_string(data->getK());
-    dio->write("The current KNN parameters are: k = " + k + ", distance metric = " + data->getMetric() + ".\n");
-    if (!dio->read().empty()) {
-        //TODO - need to check that the input is valid
+    dio->write("The current KNN parameters are: K = " + to_string(data->getK()) + ", distance metric = " +
+               data->getMetric() + ".");
+    int result;
+    const string userInput = dio->read();
 
+    if (!userInput.empty()) {
+        size_t first_index = userInput.find_first_of(' ');
+        result = checkAlgoSettingsInput(userInput);
+        if (result == 1) {
+            dio->write("invalid value for K");
+        } else if (result == 2) {
+            dio->write("invalid value for metric");
+        } else if (result == 3) {
+            dio->write("invalid value for K");
+            dio->write("invalid value for metric");
+        } else {
+            data->setK(stoi(userInput.substr(0, first_index)));
+            data->setMetric(userInput.substr(first_index + 1, userInput.length()));
+        }
     }
 }
 
+
 void classify::execute(ShareData *data) {
 
-    dio->write("classifying data complete.\n");
-    dio->write("please upload data.\n");
+    dio->write("classifying data complete.");
+    dio->write("please upload data.");
 
 }
 
 void results::execute(ShareData *data) {
-
-    dio->write("please upload data.\n");
-    dio->write("please classify the data.\n");
-
+    if (data->getClassifiedData().empty() && data->getUnClassifiedData().empty()) {
+        dio->write("please upload data.");
+    }
+    dio->write("please classify the data.");
+    int i = 1;
+    for (auto &clsVec: data->getAllUnClassVec()) {
+        dio->write(to_string(i) + "\t" + clsVec.getClass());
+        i++;
+    }
+    dio->write("Done.");
 }
 
 void download::execute(ShareData *data) {
 
 }
 
-void exitProg::execute(ShareData *data) {
-
-}
+void exitProg::execute(ShareData *data) {}

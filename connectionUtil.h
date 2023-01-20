@@ -32,6 +32,9 @@ public:
 };
 
 class SocketIO : public DefaultIO {
+
+    int sock;
+
 public:
     void setSock(int sock);
 
@@ -59,6 +62,8 @@ class ShareData {
 private:
     string classifiedData;
     string unClassifiedData;
+    vector<classifiedVector> allClassVec;
+    vector<classifiedVector> allUnClassVec;
     int k = 5;
     string metric = "AUC";
 
@@ -81,6 +86,10 @@ public:
     string getMetric() const;
 
     void setMetric(string metric);
+
+    vector<classifiedVector> getAllClassVec() const;
+
+    vector<classifiedVector> getAllUnClassVec() const;
 
 };
 
