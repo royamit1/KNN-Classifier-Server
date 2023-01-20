@@ -130,7 +130,7 @@ vector<double> fillVectorByDelim(const string &strVec, char delim) {
  * @param file_name
  * @return - a single vector that contains all the classified vectors
  */
-vector<classifiedVector> fileToVec(string &file_name) {
+vector<classifiedVector> fileToVec(const string& file_name, bool flag) {
     vector<classifiedVector> allClassVec;
     vector<double> rowVec;
     string line, word;
@@ -138,19 +138,31 @@ vector<classifiedVector> fileToVec(string &file_name) {
     fstream file(file_name, ios::in);
     if (file.is_open()) {
         while (getline(file, line)) {
-            int index = line.find_last_of(',');
-            string cls = line.substr(index + 1, line.length() - 1);
-            // create a classification vector for each row
-            // and push them into a vector of classified vectors.
-            rowVec = fillVectorByDelim(
-                    line.substr(0, index), ',');
-            classifiedVector classVec(rowVec, cls, rowVec.size());
-            // check if the vectors in the file have the same size
-            if (!allClassVec.empty() && (classVec.getLen() !=
-                                         allClassVec[allClassVec.size() - 1].getLen())) {
-                illegal();
+            if (flag) {
+                int index = line.find_last_of(',');
+                string cls = line.substr(index + 1, line.length() - 1);
+                // create a classification vector for each row
+                // and push them into a vector of classified vectors.
+                rowVec = fillVectorByDelim(
+                        line.substr(0, index), ',');
+                classifiedVector classVec(rowVec, cls, rowVec.size());
+                // check if the vectors in the file have the same size
+                if (!allClassVec.empty() && (classVec.getLen() !=
+                                             allClassVec[allClassVec.size() - 1].getLen())) {
+                    illegal();
+                }
+                allClassVec.push_back(classVec);
+            } else {
+                rowVec = fillVectorByDelim(
+                        line.substr(0, line.length()), ',');
+                classifiedVector classVec(rowVec, "", rowVec.size());
+                // check if the vectors in the file have the same size
+                if (!allClassVec.empty() && (classVec.getLen() !=
+                                             allClassVec[allClassVec.size() - 1].getLen())) {
+                    illegal();
+                }
+                allClassVec.push_back(classVec);
             }
-            allClassVec.push_back(classVec);
         }
     } else {
         cout << "no such directory";
@@ -195,10 +207,10 @@ string getClass(vector<classifiedVector> nearestVecs) {
  * @param stringVector - string that represents the user input vector
  * @return the classification according to the user input
  */
-string getClassification(vector<classifiedVector> &allClassVec, const string &distance, int neighborsNum,
-                         string stringVector) {
+string getClassification(vector<classifiedVector> allClassVec, const string &distance, int neighborsNum,
+                         vector<double> newVec) {
     // Convert from string vector to double vector
-    vector<double> newVec = fillVectorByDelim(stringVector, ' ');
+//    vector<double> newVec = fillVectorByDelim(stringVector, ' ');
     // Check if the input vector is the same length as the file vectors
     if (newVec.size() != allClassVec[0].getLen()) {
         return ERROR;
@@ -208,8 +220,8 @@ string getClassification(vector<classifiedVector> &allClassVec, const string &di
     vector<classifiedVector> k_nearest = dataStr.getK(neighborsNum);
     string k = getClass(k_nearest);
     // free the memory we allocated
-    freeMem(currentVec);
-    return k;
+//    freeMem(currentVec);
+    return "15";
 }
 
 /**

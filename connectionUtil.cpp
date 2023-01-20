@@ -77,10 +77,18 @@ void ShareData::setMetric(string metric) {
     this->metric = metric;
 }
 
-vector <classifiedVector> ShareData::getAllClassVec() const {
+vector<classifiedVector> ShareData::getAllClassVec() const {
     return this->allClassVec;
 }
 
-vector <classifiedVector> ShareData::getAllUnClassVec() const {
+void ShareData::setAllClassVec(vector<classifiedVector> allClassVec) {
+    this->allClassVec = allClassVec;
+}
+
+vector<classifiedVector> ShareData::getAllUnClassVec() const {
     return this->allUnClassVec;
+}
+
+void ShareData::setAllUnClassVec(vector <classifiedVector> allUnClassVec) {
+    this->allUnClassVec = allUnClassVec;
 }

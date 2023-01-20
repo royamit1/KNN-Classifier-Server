@@ -22,6 +22,8 @@ public:
 
     string getClass() const;
 
+    void setClass(string cls);
+
     void setDistance(double d);
 
     double getDistance() const;

@@ -89,7 +89,11 @@ public:
 
     vector<classifiedVector> getAllClassVec() const;
 
+    void setAllClassVec(vector<classifiedVector> allClassVec);
+
     vector<classifiedVector> getAllUnClassVec() const;
+
+    void setAllUnClassVec(vector <classifiedVector> allUnClassVec);
 
 };
 

@@ -33,6 +33,14 @@ string classifiedVector::getClass() const {
 }
 
 /**
+ *
+ * @param cls
+ */
+void classifiedVector::setClass(string cls)  {
+    this->classification = cls;
+}
+
+/**
  * Setting the distance of a classified vector
  * @param d - distance
  */
