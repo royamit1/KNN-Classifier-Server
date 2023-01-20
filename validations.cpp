@@ -130,7 +130,7 @@ vector<double> fillVectorByDelim(const string &strVec, char delim) {
  * @param file_name
  * @return - a single vector that contains all the classified vectors
  */
-vector<classifiedVector> fileToVec(const string& file_name, bool flag) {
+vector<classifiedVector> fileToVec(string file_name, bool flag) {
     vector<classifiedVector> allClassVec;
     vector<double> rowVec;
     string line, word;
