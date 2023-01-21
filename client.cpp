@@ -8,12 +8,22 @@
 #include <string.h>
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include "client.h"
 using namespace std;
 
 #define DELIM "."
 #define ERROR "invalid input"
 
+
+string convertChar(char *a, int size) {
+    int i;
+    string s = "";
+    for (i = 0; i < size; i++) {
+        s = s + a[i];
+    }
+    return s;
+}
 /**
  * Check if every part of the ip (separated by a dot) is valid (e.g. 192.68.24.1)
  * @param partIp - a part of the full ip number
@@ -113,6 +123,103 @@ bool check_valid_port(char *port) {
 void connectionProblem(){
     cout << "connection problem" << endl;
 }
+bool fileToString(string &file_name,string &s) {
+    string line;
+    fstream file(file_name, ios::in);
+    if (file.is_open()) {
+        while (getline(file, line)) {
+           s+=line;
+           s+='@';
+        }
+    } else {
+        return false;
+    }
+    return true;
+}
+//void case1(int sock){
+//    sendToServer(sock,"1");
+//    string firstPath,secondPath;
+//    getline(cin,firstPath);
+//    string firstStr;
+//    bool isPath= fileToString(firstPath,firstStr);
+//    if(isPath){
+//        sendToServer(sock,firstStr);
+//    }else{
+//        //TODO- deal with this
+//    }
+//
+//    getline(cin,secondPath);
+//    string secondStr;
+//    isPath= fileToString(secondPath,secondStr);
+//    if(isPath){
+//        sendToServer(sock,secondStr);
+//    }else{
+//        //TODO- deal with this
+//    }
+//}
+//"Please upload your local train CSV file."
+void case1(int sock){
+    int flag=0;
+    string userInput="1";
+    string s,tempInput;
+    while (true) {
+        // getting the input from the user
+        if(flag==1||flag==3) {
+            tempInput = "\0";
+            getline(cin, userInput);
+            bool isPath = fileToString(userInput, tempInput);
+            if (isPath) {
+                sendToServer(sock, tempInput);
+            } else {
+                //TODO- deal with this
+            }
+            userInput = tempInput;
+        }
+        else if(flag!=2){
+            if (!sendToServer(sock,userInput)) {
+                connectionProblem();
+                break;
+            }
+        }
+
+        s="\0";
+        // receive
+        if (!reciveFromServer(sock,s)) {
+            connectionProblem();
+            break;
+        }
+        cout<<s<<'\n';
+        flag++;
+        if (flag==4){
+            return;
+        }
+    }
+}
+bool sendToServer(int sock,string userInput){
+    userInput+='$';
+    size_t data_len = userInput.length();
+    char vectorArr[userInput.length() + 1];
+    strcpy(vectorArr, userInput.c_str());
+    int sent_bytes = send(sock, vectorArr, data_len, 0);
+    if (sent_bytes < 0) {
+        return false;
+    }
+    return true;
+}
+bool reciveFromServer(int sock,string &s){
+    char buffer[4096] = "\0";
+    int expected_data_len = sizeof(buffer);
+    int read_bytes = recv(sock, buffer, expected_data_len, 0);
+    if (read_bytes == 0) {
+        return false;
+    } else if (read_bytes < 0) {
+        return false;
+    }
+    s= convertChar(buffer,read_bytes-1);
+    return true;
+}
+
+
 
 /**
  * This function connects between the server and the client
@@ -136,50 +243,29 @@ void sendVector(string ip, int port) {
     if (connect(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
         perror("error connecting to server");
     }
-
+    string s;
     while (true) {
-        // send
-        // getting the input from the user
-        string userInput;
-        getline(cin, userInput);
-        if (userInput == "-1") {
-            flag = true;
-        }
-        // case - invalid input
-        //TODO - uncomment this
-//        else if (!check_valid_user_input(userInput, userInput.length())) {
-//            cout << "Invalid Input" << endl;
-//            continue;
-//        }
-        size_t data_len = userInput.length();
-        char vectorArr[userInput.length() + 1];
-        strcpy(vectorArr, userInput.c_str());
-        int sent_bytes = send(sock, vectorArr, data_len, 0);
-        if (sent_bytes < 0) {
+        // receive
+        s="\0";
+        if (!reciveFromServer(sock,s)) {
             connectionProblem();
             break;
         }
-        if (flag) {
-            break;
+            cout<<s<<endl;
+
+        if(s==""){
+            // getting the input from the user
+            string userInput;
+            getline(cin, userInput);
+            if(userInput=="1"){
+                case1(sock);
+            }else if (!sendToServer(sock,userInput)) {
+                connectionProblem();
+                break;
+            }
         }
 
-        // receive
-        char buffer[4096] = "\0";
-        int expected_data_len = sizeof(buffer);
-        int read_bytes = recv(sock, buffer, expected_data_len, 0);
-        if (read_bytes == 0) {
-            connectionProblem();
-            break;
-        } else if (read_bytes < 0) {
-            connectionProblem();
-            break;
-        } else {
-            if (strcmp(buffer, ERROR) == 0){
-                cout << ERROR << endl;
-                continue;
-            }
-            cout << buffer << endl;
-        }
+
     }
     close(sock);
     return;
@@ -207,7 +293,7 @@ void sendVector(string ip, int port) {
 //TODO - delete this
 int main(int argc, char *argv[]) {
     const string ip = "127.0.0.1";
-    const int port_no = 12345;
+    const int port_no = 12342;
     sendVector(ip, port_no);
     return 0;
 }

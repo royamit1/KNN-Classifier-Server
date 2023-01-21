@@ -137,7 +137,7 @@ vector<classifiedVector *> stringToVec(string strData) {
 
     while (strData[i] != '$') {
         string newVec;
-        while (strData[i] != '\n') {
+        while (strData[i] != '@') {
             newVec += strData[i];
             i++;
         }

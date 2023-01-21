@@ -32,11 +32,12 @@ public:
 };
 
 class SocketIO : public DefaultIO {
-
+private:
     int sock;
-
+    int client_sock;
 public:
     void setSock(int sock);
+    void setClientSock(int client_sock);
 
     string read() override;
 
@@ -98,5 +99,6 @@ public:
 };
 
 string convertCharToString(char *a, int size);
+int connectToClient(int sock);
 
 #endif //YOAV_ROY_ASS4_REPO_CONNECTIONUTIL_H

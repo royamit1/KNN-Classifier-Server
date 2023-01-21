@@ -102,6 +102,7 @@ void algoSettings::execute(ShareData *data) {
     dio->write("The current KNN parameters are: K = " + to_string(data->getK()) + ", distance metric = " +
                data->getMetric() + ".");
     int result;
+    //dio->write("");
     const string userInput = dio->read();
 
     if (!userInput.empty()) {
@@ -112,8 +113,7 @@ void algoSettings::execute(ShareData *data) {
         } else if (result == 2) {
             dio->write("invalid value for metric");
         } else if (result == 3) {
-            dio->write("invalid value for K");
-            dio->write("invalid value for metric");
+            dio->write("invalid value for K and invalid value for metric");
         } else {
             data->setK(stoi(userInput.substr(0, first_index)));
             data->setMetric(userInput.substr(first_index + 1, userInput.length()));
