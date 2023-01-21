@@ -9,7 +9,7 @@
 
 class vecComparator {
 public:
-    bool operator()(const classifiedVector &v1, const classifiedVector &v2);
+    bool operator()(classifiedVector *v1, classifiedVector *v2);
 };
 
 #endif //_VECCOMPARATOR_H_

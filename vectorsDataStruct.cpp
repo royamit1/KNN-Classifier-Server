@@ -14,7 +14,7 @@ vectorsDataStruct::vectorsDataStruct(disVector &structureVector,
                                      vector<classifiedVector *> vectorsHeap) {
     this->structureVector = structureVector;
     updateDistances(vectorsHeap);
-    make_heap(*vectorsHeap.begin(), *vectorsHeap.end(), vecComparator());
+    make_heap(vectorsHeap.begin(), vectorsHeap.end(), vecComparator());
     this->vectorsHeap = vectorsHeap;
 }
 
@@ -51,8 +51,8 @@ vector<classifiedVector *> vectorsDataStruct::getK(int k) {
     vector<classifiedVector *> kSmallestVectors;
     for (int i = 0; i < k; i++) {
         kSmallestVectors.push_back(vectorsHeap.at(0));
-        pop_heap(*vectorsHeap.begin(),
-                 *vectorsHeap.end() - i, vecComparator());
+        pop_heap(vectorsHeap.begin(),
+                 vectorsHeap.end() - i, vecComparator());
     }
     return kSmallestVectors;
 }

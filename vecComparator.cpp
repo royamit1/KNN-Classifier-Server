@@ -7,7 +7,7 @@ using namespace std;
  * @param v2 second vector
  * @return true if v1 bigger thn v2, false otherwise
  */
-bool vecComparator::operator()(const classifiedVector &v1,
-                               const classifiedVector &v2) {
-    return v1.getDistance() > v2.getDistance();
+bool vecComparator::operator()(classifiedVector *v1,
+                               classifiedVector *v2) {
+    return v1->getDistance() > v2->getDistance();
 }
