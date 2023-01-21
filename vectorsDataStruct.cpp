@@ -23,7 +23,7 @@ vectorsDataStruct::vectorsDataStruct(disVector &structureVector,
  * @param vectorsHeap the vectors in the data
  */
 void vectorsDataStruct::updateDistances(vector<classifiedVector *> &vectorsHeap) {
-    for (auto & i : vectorsHeap) {
+    for (auto &i: vectorsHeap) {
         // get the current vector
         // get the distance
         double currentDistance =

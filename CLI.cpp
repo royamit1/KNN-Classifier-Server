@@ -46,8 +46,7 @@ void CLI::start() {
         } else if (strInput[0] == '8') {
             commands[commands.size() - 1]->execute(&data);
             i = commands.size() - 1;
-        }
-        else {
+        } else {
             dio->write("Invalid input");
         }
     }
