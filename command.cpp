@@ -17,6 +17,9 @@ command::command(DefaultIO *dio, string description) {
     this->description = description;
 }
 
+/**
+ * @return - the description of the command
+ */
 string command::getDes() { return this->description; }
 
 /**
@@ -81,7 +84,6 @@ void update::execute(ShareData *data) {
     dio->write("Please upload your local test CSV file.");
     data->setUnClassifiedData(dio->read());
     dio->write("Upload complete.");
-
 }
 
 /**
@@ -96,9 +98,6 @@ void algoSettings::execute(ShareData *data) {
                data->getMetric() + ".");
     int result;
     const string userInput = dio->read();
-
-    //TODO - need to check if k is greater than number of classified vectors
-    //TODO - check that k > 0
 
     if (!userInput.empty()) {
         size_t first_index = userInput.find_first_of(' ');
@@ -126,22 +125,23 @@ void algoSettings::execute(ShareData *data) {
  */
 void classify::execute(ShareData *data) {
 
-    //TODO - check that the unclassified vectors is with the same length
-
     if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
         dio->write("please upload data.");
     } else {
         data->setAllClassVec(fileToVec(data->getClassifiedData(), true));
         data->setAllUnClassVec(fileToVec(data->getUnClassifiedData(), false));
-
-        for (int i = 0; i < data->getAllUnClassVec().size(); ++i) {
-            data->getAllUnClassVec()[i]->setClass(
-                    getClassification(data->getAllClassVec(),
-                                      data->getMetric(),
-                                      data->getK(),
-                                      data->getAllUnClassVec()[i]->getCurrVec()));
+        if (data->getAllClassVec().size() < data->getK()) {
+            dio->write("invalid input - k is greater than the number of classified vectors.");
+        } else {
+            for (int i = 0; i < data->getAllUnClassVec().size(); ++i) {
+                data->getAllUnClassVec()[i]->setClass(
+                        getClassification(data->getAllClassVec(),
+                                          data->getMetric(),
+                                          data->getK(),
+                                          data->getAllUnClassVec()[i]->getCurrVec()));
+            }
+            dio->write("classifying data complete.");
         }
-        dio->write("classifying data complete.");
     }
 }
 
@@ -174,7 +174,7 @@ void results::execute(ShareData *data) {
  * @param data - ShareData object
  */
 void download::execute(ShareData *data) {
-
+    string results = dio->read();
 }
 
 /**

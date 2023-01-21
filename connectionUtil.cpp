@@ -9,16 +9,28 @@
 #define BUFFERSIZE 4096
 using namespace std;
 
+/**
+ * This function writes to cout
+ * @param s - string to write to cout
+ */
 void StandardIO::write(string s) {
     cout << s << "\n";
 }
 
+/**
+ * This function reads from cin
+ * @return - the string input
+ */
 string StandardIO::read() {
     string x;
     getline(cin, x);
     return x;
 }
 
+/**
+ * setter for the socket number
+ * @param sock - socket number
+ */
 void SocketIO::setSock(int sock) {
     this->sock = sock;
 }
@@ -36,6 +48,12 @@ void SocketIO::write(string s) {
     send(sock, buffer, s.length(), 0);
 }
 
+/**
+ * converts character array to string and returns it
+ * @param a - the char array
+ * @param size - size of the array
+ * @return - the string
+ */
 string convertCharToString(char *a, int size) {
     int i;
     string s = "";

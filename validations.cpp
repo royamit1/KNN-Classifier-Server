@@ -204,13 +204,11 @@ string getClass(vector<classifiedVector *> nearestVecs) {
  * @param allClassVec - vector that contains all classified vectors
  * @param distance - string that represents the distance function
  * @param neighborsNum - number of neighbors to check from
- * @param stringVector - string that represents the user input vector
+ * @param newVec - a double vector that represents the user input vector
  * @return the classification according to the user input
  */
 string getClassification(vector<classifiedVector *> allClassVec, const string &distance, int neighborsNum,
                          vector<double> newVec) {
-    // Convert from string vector to double vector
-//    vector<double> newVec = fillVectorByDelim(stringVector, ' ');
     // Check if the input vector is the same length as the file vectors
     vector<classifiedVector *> k_nearest;
     if (newVec.size() != allClassVec[0]->getLen()) {
@@ -253,19 +251,23 @@ bool check_valid_dis(string dis) {
  */
 int checkAlgoSettingsInput(const string &userInput) {
     size_t first_index = userInput.find_first_of(' ');
-    string newK = userInput.substr(0, first_index - 1);
+    string newK = userInput.substr(0, first_index);
     string newDis = userInput.substr(first_index + 1, userInput.length());
     bool flag = true;
     int count = 0;
 
-    // two checks for validation of K
+    // check if 1 of the chars isn't a digit
     for (char const &c: newK) {
         if (isdigit(c) == 0) {
             flag = false;
             break;
         }
     }
-    if (flag && (newK.length() > 10 || !checkNumber(newK))) {
+    if (flag && ((newK.length() >= 1 && newK[0] == '0') || newK.length() > 10)) {
+        flag = false;
+    }
+
+    if (flag && !checkNumber(newK)) {
         flag = false;
     }
 
