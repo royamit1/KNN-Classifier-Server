@@ -102,7 +102,7 @@ void algoSettings::execute(ShareData *data) {
     dio->write("The current KNN parameters are: K = " + to_string(data->getK()) + ", distance metric = " +
                data->getMetric() + ".");
     int result;
-    //dio->write("");
+    dio->write("");
     const string userInput = dio->read();
 
     if (!userInput.empty()) {
