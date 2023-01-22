@@ -125,6 +125,40 @@ vector<double> fillVectorByDelim(const string &strVec, char delim) {
 }
 
 /**
+ *
+ * @param file_name
+ * @param flag
+ * @return
+ */
+vector<classifiedVector *> stringToVec(string strData) {
+    int i = 0;
+    vector<classifiedVector *> allClassVec;
+    vector<double> rowVec;
+
+    while (strData[i] != '$') {
+        string newVec;
+        while (strData[i] != '\n') {
+            newVec += strData[i];
+            i++;
+        }
+        int index = newVec.find_last_of(',');
+        string cls = newVec.substr(index + 1, newVec.length() - (index + 1));
+        // create a classification vector for each row
+        // and push them into a vector of classified vectors.
+        rowVec = fillVectorByDelim(newVec.substr(0, index), ',');
+        classifiedVector *classVec = new classifiedVector(rowVec, cls, rowVec.size());
+        // check if the vectors in the file have the same size
+        if (!allClassVec.empty() && (classVec->getLen() !=
+                                     allClassVec[allClassVec.size() - 1]->getLen())) {
+            illegal();
+        }
+        allClassVec.push_back(classVec);
+        i++;
+    }
+    return allClassVec;
+}
+
+/**
  * Creating a vector of classified vectors, where each
  * classified vector is a single row in the file
  * @param file_name

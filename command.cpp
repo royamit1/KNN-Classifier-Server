@@ -2,6 +2,8 @@
 #include "command.h"
 #include "connectionUtil.h"
 #include "validations.h"
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -66,6 +68,8 @@ exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
 
 // execute for each command
 
+//TODO - write stays the same, read
+
 /**
  * This is the execution of update command:
  * the user will be given the option to type a path to his local train and test csv file, and after pressing enter,
@@ -75,11 +79,12 @@ exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
  * @param data - ShareData object
  */
 void update::execute(ShareData *data) {
-
-    //TODO - check if path is valid
-
+    int i = 0;
     dio->write("Please upload your local train CSV file.");
-    data->setClassifiedData(dio->read());
+    data->setClassifiedData(dio->read() + '$');
+
+    data->setAllClassVec(stringToVec(data->getClassifiedData()));
+
     dio->write("Upload complete.");
     dio->write("Please upload your local test CSV file.");
     data->setUnClassifiedData(dio->read());
