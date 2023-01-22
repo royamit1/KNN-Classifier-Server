@@ -125,32 +125,78 @@ vector<double> fillVectorByDelim(const string &strVec, char delim) {
 }
 
 /**
+ *
+ * @param file_name
+ * @param flag
+ * @return
+ */
+vector<classifiedVector *> stringToVec(string strData) {
+    int i = 0;
+    vector<classifiedVector *> allClassVec;
+    vector<double> rowVec;
+
+    while (strData[i] != '$') {
+        string newVec;
+        while (strData[i] != '\n') {
+            newVec += strData[i];
+            i++;
+        }
+        int index = newVec.find_last_of(',');
+        string cls = newVec.substr(index + 1, newVec.length() - (index + 1));
+        // create a classification vector for each row
+        // and push them into a vector of classified vectors.
+        rowVec = fillVectorByDelim(newVec.substr(0, index), ',');
+        classifiedVector *classVec = new classifiedVector(rowVec, cls, rowVec.size());
+        // check if the vectors in the file have the same size
+        if (!allClassVec.empty() && (classVec->getLen() !=
+                                     allClassVec[allClassVec.size() - 1]->getLen())) {
+            illegal();
+        }
+        allClassVec.push_back(classVec);
+        i++;
+    }
+    return allClassVec;
+}
+
+/**
  * Creating a vector of classified vectors, where each
  * classified vector is a single row in the file
  * @param file_name
  * @return - a single vector that contains all the classified vectors
  */
-vector<classifiedVector> fileToVec(string &file_name) {
-    vector<classifiedVector> allClassVec;
+vector<classifiedVector *> fileToVec(string file_name, bool flag) {
+    vector<classifiedVector *> allClassVec;
     vector<double> rowVec;
     string line, word;
 
     fstream file(file_name, ios::in);
     if (file.is_open()) {
         while (getline(file, line)) {
-            int index = line.find_last_of(',');
-            string cls = line.substr(index + 1, line.length() - 1);
-            // create a classification vector for each row
-            // and push them into a vector of classified vectors.
-            rowVec = fillVectorByDelim(
-                    line.substr(0, index), ',');
-            classifiedVector classVec(rowVec, cls, rowVec.size());
-            // check if the vectors in the file have the same size
-            if (!allClassVec.empty() && (classVec.getLen() !=
-                                         allClassVec[allClassVec.size() - 1].getLen())) {
-                illegal();
+            if (flag) {
+                int index = line.find_last_of(',');
+                string cls = line.substr(index + 1, line.length() - 1);
+                // create a classification vector for each row
+                // and push them into a vector of classified vectors.
+                rowVec = fillVectorByDelim(
+                        line.substr(0, index), ',');
+                classifiedVector *classVec = new classifiedVector(rowVec, cls, rowVec.size());
+                // check if the vectors in the file have the same size
+                if (!allClassVec.empty() && (classVec->getLen() !=
+                                             allClassVec[allClassVec.size() - 1]->getLen())) {
+                    illegal();
+                }
+                allClassVec.push_back(classVec);
+            } else {
+                rowVec = fillVectorByDelim(
+                        line.substr(0, line.length()), ',');
+                classifiedVector *classVec = new classifiedVector(rowVec, "", rowVec.size());
+                // check if the vectors in the file have the same size
+                if (!allClassVec.empty() && (classVec->getLen() !=
+                                             allClassVec[allClassVec.size() - 1]->getLen())) {
+                    illegal();
+                }
+                allClassVec.push_back(classVec);
             }
-            allClassVec.push_back(classVec);
         }
     } else {
         cout << "no such directory";
@@ -165,7 +211,7 @@ vector<classifiedVector> fileToVec(string &file_name) {
  * @param nearestVecs - vector of k nearest vectors
  * @return the most common classification of the k nearest vectors
  */
-string getClass(vector<classifiedVector> nearestVecs) {
+string getClass(vector<classifiedVector *> nearestVecs) {
     map<string, int> clsCounts;
     int maxVal = 0;
     string cls;
@@ -173,15 +219,15 @@ string getClass(vector<classifiedVector> nearestVecs) {
     // clsVec represents a classified vector
     for (auto &clsVec: nearestVecs) {
         // if the key isn't in the map, add the key with value = 1
-        if (clsCounts.count(clsVec.getClass()) == 0) {
-            clsCounts.insert({clsVec.getClass(), 1});
+        if (clsCounts.count(clsVec->getClass()) == 0) {
+            clsCounts.insert({clsVec->getClass(), 1});
         }
         // else - increment the value for this key
-        clsCounts[clsVec.getClass()]++;
-        if (clsCounts[clsVec.getClass()] > maxVal) {
+        clsCounts[clsVec->getClass()]++;
+        if (clsCounts[clsVec->getClass()] > maxVal) {
             // remember the most common classification
-            maxVal = clsCounts[clsVec.getClass()];
-            cls = clsVec.getClass();
+            maxVal = clsCounts[clsVec->getClass()];
+            cls = clsVec->getClass();
         }
     }
     return cls;
@@ -192,23 +238,27 @@ string getClass(vector<classifiedVector> nearestVecs) {
  * @param allClassVec - vector that contains all classified vectors
  * @param distance - string that represents the distance function
  * @param neighborsNum - number of neighbors to check from
- * @param stringVector - string that represents the user input vector
+ * @param newVec - a double vector that represents the user input vector
  * @return the classification according to the user input
  */
-string getClassification(vector<classifiedVector> &allClassVec, const string &distance, int neighborsNum,
-                         string stringVector) {
-    // Convert from string vector to double vector
-    vector<double> newVec = fillVectorByDelim(stringVector, ' ');
+string getClassification(vector<classifiedVector *> allClassVec, const string &distance, int neighborsNum,
+                         vector<double> newVec) {
     // Check if the input vector is the same length as the file vectors
-    if (newVec.size() != allClassVec[0].getLen()) {
+    vector<classifiedVector *> k_nearest;
+    if (newVec.size() != allClassVec[0]->getLen()) {
         return ERROR;
     }
-    disVector currentVec(newVec, distance);
-    vectorsDataStruct dataStr(currentVec, allClassVec);
-    vector<classifiedVector> k_nearest = dataStr.getK(neighborsNum);
+    disVector *currentVec = new disVector(newVec, distance);
+    vectorsDataStruct *dataStr = new vectorsDataStruct(*currentVec, allClassVec);
+    vector<classifiedVector *> a = (dataStr->getK(neighborsNum));
+    for (int i = 0; i < neighborsNum; ++i) {
+        k_nearest.push_back(a[i]);
+    }
     string k = getClass(k_nearest);
     // free the memory we allocated
-    freeMem(currentVec);
+    freeMem(*currentVec);
+    delete currentVec;
+    delete dataStr;
     return k;
 }
 
@@ -226,6 +276,49 @@ bool check_valid_dis(string dis) {
     }
     return false;
 }
+
+/**
+ * This function checks the validation of the user input in option 2
+ * @param userInput - string that contains K and a metric.
+ * @return - 0 if the input is valid, 1 if the k is invalid, 2 if the metric is invalid
+ * and 3 if both are invalid.
+ */
+int checkAlgoSettingsInput(const string &userInput) {
+    size_t first_index = userInput.find_first_of(' ');
+    string newK = userInput.substr(0, first_index);
+    string newDis = userInput.substr(first_index + 1, userInput.length());
+    bool flag = true;
+    int count = 0;
+
+    // check if 1 of the chars isn't a digit
+    for (char const &c: newK) {
+        if (isdigit(c) == 0) {
+            flag = false;
+            break;
+        }
+    }
+    if (flag && ((newK.length() >= 1 && newK[0] == '0') || newK.length() > 10)) {
+        flag = false;
+    }
+
+    if (flag && !checkNumber(newK)) {
+        flag = false;
+    }
+
+    // return a different number base on the validation of the input
+    if (!flag && !check_valid_dis(newDis)) {
+        count = 3;
+    } else {
+        if (!flag) {
+            count = 1;
+        }
+        if (!check_valid_dis(newDis)) {
+            count = 2;
+        }
+    }
+    return count;
+}
+
 
 /**
  * This function gets a string of the user input, and checks the validation of every parameter

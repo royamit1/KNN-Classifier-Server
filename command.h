@@ -23,7 +23,7 @@ public:
 
     virtual void execute(ShareData *data) = 0;
 
-    virtual string getDes() = 0;
+    string getDes();
 
 };
 
@@ -39,7 +39,6 @@ public:
 
     void execute(ShareData *data) override;
 
-    string getDes() override;
 };
 
 /**
@@ -53,8 +52,6 @@ public:
     ~algoSettings() override = default;
 
     void execute(ShareData *data) override;
-
-    string getDes() override;
 
 };
 
@@ -70,8 +67,6 @@ public:
 
     void execute(ShareData *data) override;
 
-    string getDes() override;
-
 };
 
 /**
@@ -85,8 +80,6 @@ public:
     ~results() override = default;
 
     void execute(ShareData *data) override;
-
-    string getDes() override;
 
 };
 
@@ -102,8 +95,6 @@ public:
 
     void execute(ShareData *data) override;
 
-    string getDes() override;
-
 };
 
 /**
@@ -117,8 +108,6 @@ public:
     ~exitProg() override = default;
 
     void execute(ShareData *data) override;
-
-    string getDes() override;
 
 };
 

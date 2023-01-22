@@ -28,29 +28,33 @@ CLI::~CLI() {
 /**
  * This function presents the selection options to the user
  */
-//void CLI::start() {
-//    string strInput;
-//    int intInput;
-//    ShareData data;
-//    int i=0;
-//    while (commands[i]->getDes()[0] != '8') {
-//        dio->write("Welcome to the KNN Classifier Server. Please choose an option:\n");
-//        for (int j = 0; j < 6; ++j) {
-//            dio->write(commands[j]->getDes() + "\n");
-//        }
-//        strInput = dio->read();
-//        if ((strInput[0] >= '1' || strInput[0] <= '5') || strInput[0] == '8') {
-//            intInput = stoi(strInput[0]);
-//            commands[intInput]->execute(&data);
-//        }
-//
-//        //TODO - the server returns "invalid input" and go back to main menu
-//    }
-//}
 void CLI::start() {
-    while (true){
-        string x=dio->read();
-        cout << x<<"\n";
-        dio->write(x);
+    string strInput;
+    int intInput;
+    ShareData data;
+    size_t i = 0;
+    while (commands[i]->getDes()[0] != '8') {
+        dio->write("Welcome to the KNN Classifier Server. Please choose an option:");
+        for (int j = 0; j < commands.size(); ++j) {
+            dio->write(commands[j]->getDes());
+        }
+        strInput = dio->read();
+        if (strInput[0] >= '1' && strInput[0] <= '5') {
+            intInput = stoi(strInput);
+            commands[intInput - 1]->execute(&data);
+            i = intInput;
+        } else if (strInput[0] == '8') {
+            commands[commands.size() - 1]->execute(&data);
+            i = commands.size() - 1;
+        } else {
+            dio->write("Invalid input");
+        }
     }
 }
+//void CLI::start() {
+//    while (true){
+//        string x=dio->read();
+//        cout << x<<"\n";
+//        dio->write(x);
+//    }
+//}
