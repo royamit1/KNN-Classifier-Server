@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include "CLI.h"
 #include "connectionUtil.h"
+
 #define BUFFERSIZE 4096
 #define ERROR "invalid input"
 
@@ -175,7 +176,7 @@ void acceptVector(int port, string file) {
                 break;
             } else {
                 if (strcmp(buffer, "-1") == 0) {
-                   break;
+                    break;
                 }
             }
 
@@ -211,7 +212,7 @@ void acceptVector(int port, string file) {
 //
 //}
 
-int makeConnection(int port){
+int makeConnection(int port) {
     bool flag = false;
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -234,30 +235,32 @@ int makeConnection(int port){
     }
     return sock;
 }
-void handleThread(int client_sock){
+
+void handleThread(int client_sock) {
     SocketIO newSock;
     newSock.setClientSock(client_sock);
     CLI currentCli(&newSock);
     currentCli.start();
 }
 
-void handleClients(int sock){
+void handleClients(int sock) {
     vector<thread> threadsVector;
-    while(true) {
+    while (true) {
         int client_sock = connectToClient(sock);
         threadsVector.emplace_back(handleThread, client_sock);
-        threadsVector.at(threadsVector.size()-1).detach();
+        threadsVector.at(threadsVector.size() - 1).detach();
 //        for (int i = 0; i < threadsVector.size(); i++) {
 //            threadsVector.at(i).join();
 //        }
     }
 }
 
-void handleInoutThread(int id){
+void handleInoutThread(int id) {
     StandardIO newS;
     CLI currentCli(&newS);
     currentCli.start();
 }
+
 /**
  * This is the main function of server
  */
@@ -268,7 +271,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     const int server_port = stoi(argv[1]);
-    int sock=makeConnection(server_port);
+    int sock = makeConnection(server_port);
     handleClients(sock);
     //thread t(handleThread,1);
     //acceptVector(server_port, file_name);
