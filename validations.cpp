@@ -130,7 +130,7 @@ vector<double> fillVectorByDelim(const string &strVec, char delim) {
  * @param flag
  * @return
  */
-vector<classifiedVector *> stringToVec(string strData) {
+vector<classifiedVector *> stringToVec(string strData, bool flag) {
     int i = 0;
     vector<classifiedVector *> allClassVec;
     vector<double> rowVec;
@@ -141,18 +141,30 @@ vector<classifiedVector *> stringToVec(string strData) {
             newVec += strData[i];
             i++;
         }
-        int index = newVec.find_last_of(',');
-        string cls = newVec.substr(index + 1, newVec.length() - (index + 1));
-        // create a classification vector for each row
-        // and push them into a vector of classified vectors.
-        rowVec = fillVectorByDelim(newVec.substr(0, index), ',');
-        classifiedVector *classVec = new classifiedVector(rowVec, cls, rowVec.size());
-        // check if the vectors in the file have the same size
-        if (!allClassVec.empty() && (classVec->getLen() !=
-                                     allClassVec[allClassVec.size() - 1]->getLen())) {
-            illegal();
+        if (flag) {
+            int index = newVec.find_last_of(',');
+            string cls = newVec.substr(index + 1, newVec.length() - (index + 1));
+            // create a classification vector for each row
+            // and push them into a vector of classified vectors.
+            rowVec = fillVectorByDelim(newVec.substr(0, index), ',');
+            classifiedVector *classVec = new classifiedVector(rowVec, cls, rowVec.size());
+            // check if the vectors in the file have the same size
+            if (!allClassVec.empty() && (classVec->getLen() !=
+                                         allClassVec[allClassVec.size() - 1]->getLen())) {
+                illegal();
+            }
+            allClassVec.push_back(classVec);
+        } else {
+            rowVec = fillVectorByDelim(
+                    newVec.substr(0, newVec.length()), ',');
+            classifiedVector *classVec = new classifiedVector(rowVec, "", rowVec.size());
+            // check if the vectors in the file have the same size
+            if (!allClassVec.empty() && (classVec->getLen() !=
+                                         allClassVec[allClassVec.size() - 1]->getLen())) {
+                illegal();
+            }
+            allClassVec.push_back(classVec);
         }
-        allClassVec.push_back(classVec);
         i++;
     }
     return allClassVec;

@@ -79,15 +79,18 @@ exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
  * @param data - ShareData object
  */
 void update::execute(ShareData *data) {
-    int i = 0;
-    dio->write("Please upload your local train CSV file.");
-    data->setClassifiedData(dio->read() + '$');
 
-    data->setAllClassVec(stringToVec(data->getClassifiedData()));
+    dio->write("Please upload your local train CSV file.");
+
+    data->setClassifiedData(dio->read() + '$');
+    data->setAllClassVec(stringToVec(data->getClassifiedData(), true));
 
     dio->write("Upload complete.");
     dio->write("Please upload your local test CSV file.");
-    data->setUnClassifiedData(dio->read());
+
+    data->setUnClassifiedData(dio->read() + '$');
+    data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false));
+
     dio->write("Upload complete.");
 }
 
@@ -116,7 +119,7 @@ void algoSettings::execute(ShareData *data) {
             dio->write("invalid value for K and invalid value for metric");
         } else {
             data->setK(stoi(userInput.substr(0, first_index)));
-            data->setMetric(userInput.substr(first_index + 1, userInput.length()));
+            data->setMetric(userInput.substr(first_index + 1, userInput.length() - (first_index + 1)));
         }
     }
 }
@@ -133,8 +136,8 @@ void classify::execute(ShareData *data) {
     if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
         dio->write("please upload data.");
     } else {
-        data->setAllClassVec(fileToVec(data->getClassifiedData(), true));
-        data->setAllUnClassVec(fileToVec(data->getUnClassifiedData(), false));
+        data->setAllClassVec(stringToVec(data->getClassifiedData(), true));
+        data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false));
         if (data->getAllClassVec().size() < data->getK()) {
             dio->write("invalid input - k is greater than the number of classified vectors.");
         } else {

@@ -20,7 +20,7 @@ bool checkSpaces(string vec);
 
 vector<double> fillVectorByDelim(const string &strVec, char delim);
 
-vector<classifiedVector *> stringToVec(string file_name);
+vector<classifiedVector *> stringToVec(string file_name, bool flag);
 
 vector<classifiedVector *> fileToVec(string file_name, bool flag);
 
