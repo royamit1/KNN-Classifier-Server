@@ -24,10 +24,6 @@ CLI::~CLI() {
         delete command;
     }
 }
-
-/**
- * This function presents the selection options to the user
- */
 void CLI::start() {
     string strInput;
     int intInput;
@@ -38,6 +34,7 @@ void CLI::start() {
         for (int j = 0; j < commands.size(); ++j) {
             dio->write(commands[j]->getDes());
         }
+        dio->write("");
         strInput = dio->read();
         if (strInput[0] >= '1' && strInput[0] <= '5') {
             intInput = stoi(strInput);
@@ -51,6 +48,9 @@ void CLI::start() {
         }
     }
 }
+/**
+ * This function presents the selection options to the user
+ */
 //void CLI::start() {
 //    while (true){
 //        string x=dio->read();

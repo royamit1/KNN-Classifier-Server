@@ -9,6 +9,7 @@
 #include "validations.h"
 #include "vectorData.h"
 #include <thread>
+#include <unistd.h>
 #include "CLI.h"
 #include "connectionUtil.h"
 #define BUFFERSIZE 4096
@@ -97,22 +98,22 @@ vectorData createVecData(string userInput, int read_bytes) {
  * @return
  */
 string classify(char *buffer, string file_name, int read_bytes) {
-    string userInput = convertToString(buffer, read_bytes);
-    if (!check_valid_user_input(userInput, read_bytes)) {
-        return ERROR;
-    }
-    // getting the vectors from the file
-    vector<classifiedVector> allClassVec = fileToVec(file_name);
-    // separating the user's input to the different values
-    vectorData vecData = createVecData(userInput, read_bytes);
-    // case - k is bigger than the amount of vectors in the file
-    if (allClassVec.size() < vecData.getK()) {
-        return ERROR;
-    }
-    // getting the classification
-    string classification = getClassification(allClassVec, vecData.getDistance(),
-                                              vecData.getK(), vecData.getVec());
-    return classification;
+//    string userInput = convertToString(buffer, read_bytes);
+//    if (!check_valid_user_input(userInput, read_bytes)) {
+//        return ERROR;
+//    }
+//    // getting the vectors from the file
+//    vector<classifiedVector> allClassVec = fileToVec(file_name);
+//    // separating the user's input to the different values
+//    vectorData vecData = createVecData(userInput, read_bytes);
+//    // case - k is bigger than the amount of vectors in the file
+//    if (allClassVec.size() < vecData.getK()) {
+//        return ERROR;
+//    }
+//    // getting the classification
+//    string classification = getClassification(allClassVec, vecData.getDistance(),
+//                                              vecData.getK(), vecData.getVec());
+//    return classification;
 }
 
 /**
@@ -124,6 +125,7 @@ int connectClient(int sock) {
     struct sockaddr_in client_sin;
     unsigned int addr_len = sizeof(client_sin);
     int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);
+
     if (client_sock < 0) {
         cout << "error accepting client" << endl;
         exit(1);
@@ -232,12 +234,25 @@ int makeConnection(int port){
     }
     return sock;
 }
-void handleThread(int id){
+void handleThread(int client_sock){
     SocketIO newSock;
-    newSock.setSock(id);
+    newSock.setClientSock(client_sock);
     CLI currentCli(&newSock);
     currentCli.start();
 }
+
+void handleClients(int sock){
+    vector<thread> threadsVector;
+    while(true) {
+        int client_sock = connectToClient(sock);
+        threadsVector.emplace_back(handleThread, client_sock);
+        threadsVector.at(threadsVector.size()-1).detach();
+//        for (int i = 0; i < threadsVector.size(); i++) {
+//            threadsVector.at(i).join();
+//        }
+    }
+}
+
 void handleInoutThread(int id){
     StandardIO newS;
     CLI currentCli(&newS);
@@ -253,10 +268,10 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     const int server_port = stoi(argv[1]);
-    //int sock=makeConnection(server_port);
-    //handleThread(sock);
+    int sock=makeConnection(server_port);
+    handleClients(sock);
     //thread t(handleThread,1);
     //acceptVector(server_port, file_name);
-    handleInoutThread(1);
+    //handleInoutThread(1);
     return 0;
 }

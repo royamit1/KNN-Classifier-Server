@@ -34,18 +34,30 @@ string StandardIO::read() {
 void SocketIO::setSock(int sock) {
     this->sock = sock;
 }
+void SocketIO::setClientSock(int client_sock){
+    this->client_sock=client_sock;
+}
 
 string SocketIO::read() {
-    char buffer[BUFFERSIZE] = "\0";
-    int expected_data_len = sizeof(buffer);
-    int read_bytes = recv(sock, buffer, expected_data_len, 0);
-    return convertCharToString(buffer, read_bytes);
+    //char buffer[BUFFERSIZE] = "\0";
+    char buffer='0';
+    string s;
+    while(true){
+        recv(client_sock,&buffer,sizeof(char),0);
+        if(buffer=='$')
+            break;
+        s+=buffer;
+    }
+    //int expected_data_len = sizeof(buffer);
+    //int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
+    //return convertCharToString(buffer, read_bytes);
+    return s;
 }
 
 void SocketIO::write(string s) {
     char buffer[BUFFERSIZE] = "\0";
     strcpy(buffer, s.c_str());
-    send(sock, buffer, s.length(), 0);
+    send(client_sock, buffer, s.length()+1, 0);
 }
 
 /**
@@ -157,4 +169,16 @@ vector<classifiedVector *> ShareData::getAllUnClassVec() const {
  */
 void ShareData::setAllUnClassVec(vector<classifiedVector *> allUnClsVec) {
     this->allUnClassVec = allUnClsVec;
+}
+
+
+int connectToClient(int sock) {
+    struct sockaddr_in client_sin;
+    unsigned int addr_len = sizeof(client_sin);
+    int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);
+    if (client_sock < 0) {
+        cout << "error accepting client" << endl;
+        exit(1);
+    }
+    return client_sock;
 }
