@@ -1,12 +1,11 @@
 
 #include<iostream>
 #include <string.h>
-
-#include <fstream>
 #include <vector>
 #include "connectionUtil.h"
 
 #define BUFFERSIZE 4096
+
 using namespace std;
 
 /**
@@ -28,81 +27,67 @@ string StandardIO::read() {
 }
 
 /**
- * setter for the socket number
- * @param sock - socket number
+ * Setting the socket number of the client
+ * @param client_sock - socket number
  */
-void SocketIO::setSock(int sock) {
-    this->sock = sock;
-}
-void SocketIO::setClientSock(int client_sock){
-    this->client_sock=client_sock;
+void SocketIO::setClientSock(int client_sock) {
+    this->client_sock = client_sock;
 }
 
+/**
+ * This function reads from the socket
+ * @return - the string we read
+ */
 string SocketIO::read() {
-    //char buffer[BUFFERSIZE] = "\0";
-    char buffer='0';
+    char buffer = '0';
     string s;
-    while(true){
-        recv(client_sock,&buffer,sizeof(char),0);
-        if(buffer=='$')
+    while (true) {
+        recv(client_sock, &buffer, sizeof(char), 0);
+        if (buffer == '$')
             break;
-        s+=buffer;
+        s += buffer;
     }
-    //int expected_data_len = sizeof(buffer);
-    //int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
-    //return convertCharToString(buffer, read_bytes);
     return s;
 }
 
+/**
+ * This function writes to the socket
+ * @param s - the string to write
+ */
 void SocketIO::write(string s) {
     char buffer[BUFFERSIZE] = "\0";
     strcpy(buffer, s.c_str());
-    send(client_sock, buffer, s.length()+1, 0);
+    send(client_sock, buffer, s.length() + 1, 0);
     sleep(1);
 }
 
 /**
- * converts character array to string and returns it
- * @param a - the char array
- * @param size - size of the array
- * @return - the string
- */
-string convertCharToString(char *a, int size) {
-    int i;
-    string s = "";
-    for (i = 0; i < size; i++) {
-        s = s + a[i];
-    }
-    return s;
-}
-
-/**
- * getter for the path of the classified vectors file
- * @return - the path of the classified vectors file
+ * getter for the string of all classified vectors from the file
+ * @return - the string of all classified vectors
  */
 string ShareData::getClassifiedData() const {
     return this->classifiedData;
 }
 
 /**
- * setter for the path of the classified vectors file
- * @param s - new path to classified vectors file
+ * setter for the string of all classified vectors from the file
+ * @param s - new string of all classified vectors
  */
 void ShareData::setClassifiedData(string s) {
     this->classifiedData = s;
 }
 
 /**
- * getter for the path of the unclassified vectors file
- * @return - the path of the unclassified vectors file
+ * getter for the string of all unclassified vectors from the file
+ * @return - the string of all unclassified vectors
  */
 string ShareData::getUnClassifiedData() const {
     return this->unClassifiedData;
 }
 
 /**
- * setter for the path of the unclassified vectors file
- * @param s - new path to unclassified vectors file
+ * setter for the string of all unclassified vectors from the file
+ * @param s - new string of all unclassified vectors
  */
 void ShareData::setUnClassifiedData(string s) {
     this->unClassifiedData = s;
@@ -172,7 +157,11 @@ void ShareData::setAllUnClassVec(vector<classifiedVector *> allUnClsVec) {
     this->allUnClassVec = allUnClsVec;
 }
 
-
+/**
+ * This function creates the connection to the client
+ * @param sock - socket number
+ * @return - return the connection socket number.
+ */
 int connectToClient(int sock) {
     struct sockaddr_in client_sin;
     unsigned int addr_len = sizeof(client_sin);

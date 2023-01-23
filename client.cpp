@@ -11,12 +11,18 @@
 #include <fstream>
 #include <thread>
 #include "client.h"
-using namespace std;
 
 #define DELIM "."
 #define ERROR "invalid input"
 
+using namespace std;
 
+/**
+ *
+ * @param a
+ * @param size
+ * @return
+ */
 string convertChar(char *a, int size) {
     int i;
     string s = "";
@@ -25,6 +31,7 @@ string convertChar(char *a, int size) {
     }
     return s;
 }
+
 /**
  * Check if every part of the ip (separated by a dot) is valid (e.g. 192.68.24.1)
  * @param partIp - a part of the full ip number
@@ -121,51 +128,41 @@ bool check_valid_port(char *port) {
 /**
  * This function prints "connection problem"
  */
-void connectionProblem(){
+void connectionProblem() {
     cout << "connection problem" << endl;
 }
-bool fileToString(string &file_name,string &s) {
+
+/**
+ *
+ * @param file_name
+ * @param s
+ * @return
+ */
+bool fileToString(string &file_name, string &s) {
     string line;
     fstream file(file_name, ios::in);
     if (file.is_open()) {
         while (getline(file, line)) {
-           s+=line;
-           s+='@';
+            s += line;
+            s += '@';
         }
     } else {
         return false;
     }
     return true;
 }
-//void case1(int sock){
-//    sendToServer(sock,"1");
-//    string firstPath,secondPath;
-//    getline(cin,firstPath);
-//    string firstStr;
-//    bool isPath= fileToString(firstPath,firstStr);
-//    if(isPath){
-//        sendToServer(sock,firstStr);
-//    }else{
-//        //TODO- deal with this
-//    }
-//
-//    getline(cin,secondPath);
-//    string secondStr;
-//    isPath= fileToString(secondPath,secondStr);
-//    if(isPath){
-//        sendToServer(sock,secondStr);
-//    }else{
-//        //TODO- deal with this
-//    }
-//}
-//"Please upload your local train CSV file."
-void case1(int sock){
-    int flag=0;
-    string userInput="1";
-    string s,tempInput;
+
+/**
+ *
+ * @param sock
+ */
+void case1(int sock) {
+    int flag = 0;
+    string userInput = "1";
+    string s, tempInput;
     while (true) {
         // getting the input from the user
-        if(flag==1||flag==3) {
+        if (flag == 1 || flag == 3) {
             tempInput = "\0";
             getline(cin, userInput);
             bool isPath = fileToString(userInput, tempInput);
@@ -175,29 +172,35 @@ void case1(int sock){
                 //TODO- deal with this
             }
             userInput = tempInput;
-        }
-        else if(flag!=2){
-            if (!sendToServer(sock,userInput)) {
+        } else if (flag != 2) {
+            if (!sendToServer(sock, userInput)) {
                 connectionProblem();
                 break;
             }
         }
 
-        s="\0";
+        s = "\0";
         // receive
-        if (!reciveFromServer(sock,s)) {
+        if (!receiveFromServer(sock, s)) {
             connectionProblem();
             break;
         }
-        cout<<s<<'\n';
+        cout << s << '\n';
         flag++;
-        if (flag==4){
+        if (flag == 4) {
             return;
         }
     }
 }
-bool sendToServer(int sock,string userInput){
-    userInput+='$';
+
+/**
+ *
+ * @param sock
+ * @param userInput
+ * @return
+ */
+bool sendToServer(int sock, string userInput) {
+    userInput += '$';
     size_t data_len = userInput.length();
     char vectorArr[userInput.length() + 1];
     strcpy(vectorArr, userInput.c_str());
@@ -207,7 +210,14 @@ bool sendToServer(int sock,string userInput){
     }
     return true;
 }
-bool reciveFromServer(int sock,string &s){
+
+/**
+ *
+ * @param sock
+ * @param s
+ * @return
+ */
+bool receiveFromServer(int sock, string &s) {
     char buffer[4096] = "\0";
     int expected_data_len = sizeof(buffer);
     int read_bytes = recv(sock, buffer, expected_data_len, 0);
@@ -216,15 +226,18 @@ bool reciveFromServer(int sock,string &s){
     } else if (read_bytes < 0) {
         return false;
     }
-    s= convertChar(buffer,read_bytes-1);
+    s = convertChar(buffer, read_bytes - 1);
     return true;
 }
 
-
-void uploadToFile(string allData,string path){
-
-    int i=0;
-    allData+="$";
+/**
+ *
+ * @param allData
+ * @param path
+ */
+void uploadToFile(string allData, string path) {
+    int i = 0;
+    allData += "$";
     // Create and open a text file
     ofstream MyFile(path);
     while (allData[i] != '$') {
@@ -234,55 +247,69 @@ void uploadToFile(string allData,string path){
             i++;
         }
         // Write to the file
-        MyFile << newLine<<endl;
+        MyFile << newLine << endl;
         i++;
     }
-    // Close the file
     MyFile.close();
 }
 
-
-void case5(int sock){
-    string s,allData;
-    sendToServer(sock,"5");
+/**
+ *
+ * @param sock
+ */
+void case5(int sock) {
+    string s, allData;
+    sendToServer(sock, "5");
     while (true) {
         // receive
-        s="\0";
-        if (!reciveFromServer(sock,s)) {
+        s = "\0";
+        if (!receiveFromServer(sock, s)) {
             connectionProblem();
             break;
         }
-        if(s==""){
+        if (s == "") {
             string path;
-            getline(cin,path);
-            thread t=thread(uploadToFile,allData,path);
+            getline(cin, path);
+            thread t = thread(uploadToFile, allData, path);
             t.detach();
             return;
         }
-        cout<<s<<"\n";
-        allData+=s;
-        allData+="@";
+        cout << s << "\n";
+        allData += s;
+        allData += "@";
 
     }
 }
-void printBackSlashN(string s){
+
+/**
+ *
+ * @param s
+ */
+void printBackSlashN(string s) {
     string str;
-    for (int i = 0; i < s.length()-1; i++) {
-        if(s[i]=='\\'&&s[i+1]=='n'){
-            cout<<str<<"\n";
+    for (int i = 0; i < s.length() - 1; i++) {
+        if (s[i] == '\\' && s[i + 1] == 'n') {
+            cout << str << "\n";
         }
-        str+=s[i];
+        str += s[i];
 
     }
 }
-bool checkBackSlashN(string s){
+
+/**
+ *
+ * @param s
+ * @return
+ */
+bool checkBackSlashN(string s) {
     for (int i = 0; i < s.length(); i++) {
-        if(s[i]=='\n'){
+        if (s[i] == '\n') {
             return false;
         }
     }
     return true;
 }
+
 /**
  * This function connects between the server and the client
  * Sends the user input to the server and getting the classification
@@ -308,25 +335,24 @@ void sendVector(string ip, int port) {
     string s;
     while (true) {
         // receive
-        s="\0";
-        if (!reciveFromServer(sock,s)) {
+        s = "\0";
+        if (!receiveFromServer(sock, s)) {
             connectionProblem();
             break;
         }
         //if(checkBackSlashN())
-            cout<<s<<endl;
+        cout << s << endl;
 
 
-
-        if(s==""){
+        if (s == "") {
             // getting the input from the user
             string userInput;
             getline(cin, userInput);
-            if(userInput=="1") {
+            if (userInput == "1") {
                 case1(sock);
-            }else if(userInput=="5"){
+            } else if (userInput == "5") {
                 case5(sock);
-            }else if (!sendToServer(sock,userInput)) {
+            } else if (!sendToServer(sock, userInput)) {
                 connectionProblem();
                 break;
             }
@@ -358,10 +384,11 @@ void sendVector(string ip, int port) {
 //    return 0;
 //}
 //TODO - delete this
+
+
 int main(int argc, char *argv[]) {
     const string ip = "127.0.0.1";
     const int port_no = 12345;
     sendVector(ip, port_no);
     return 0;
-
 }

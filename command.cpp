@@ -2,7 +2,6 @@
 #include "command.h"
 #include "connectionUtil.h"
 #include "validations.h"
-#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -67,8 +66,6 @@ exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
 
 
 // execute for each command
-
-//TODO - write stays the same, read
 
 /**
  * This is the execution of update command:
