@@ -160,7 +160,7 @@ void classify::execute(ShareData *data) {
 void results::execute(ShareData *data) {
     if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
         dio->write("please upload data.");
-    } else if (data->getAllUnClassVec().empty()) {
+    } else if (data->getAllUnClassVec()[0]->getClass().empty()) {
         dio->write("please classify the data.");
     } else {
         int i = 1;
@@ -181,7 +181,7 @@ void results::execute(ShareData *data) {
 void download::execute(ShareData *data) {
     if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
         dio->write("please upload data.");
-    } else if (data->getAllUnClassVec().empty()) {
+    } else if (data->getAllUnClassVec()[0]->getClass().empty()) {
         dio->write("please classify the data.");
     } else {
         int i = 1;
