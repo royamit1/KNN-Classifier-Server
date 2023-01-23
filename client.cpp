@@ -9,6 +9,7 @@
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include <thread>
 #include "client.h"
 using namespace std;
 
@@ -220,7 +221,68 @@ bool reciveFromServer(int sock,string &s){
 }
 
 
+void uploadToFile(string allData,string path){
 
+    int i=0;
+    allData+="$";
+    // Create and open a text file
+    ofstream MyFile(path);
+    while (allData[i] != '$') {
+        string newLine;
+        while (allData[i] != '@') {
+            newLine += allData[i];
+            i++;
+        }
+        // Write to the file
+        MyFile << newLine<<endl;
+        i++;
+    }
+    // Close the file
+    MyFile.close();
+}
+
+
+void case5(int sock){
+    string s,allData;
+    sendToServer(sock,"5");
+    while (true) {
+        // receive
+        s="\0";
+        if (!reciveFromServer(sock,s)) {
+            connectionProblem();
+            break;
+        }
+        if(s==""){
+            string path;
+            getline(cin,path);
+            thread t=thread(uploadToFile,allData,path);
+            t.detach();
+            return;
+        }
+        cout<<s<<"\n";
+        allData+=s;
+        allData+="@";
+
+    }
+}
+void printBackSlashN(string s){
+    string str;
+    for (int i = 0; i < s.length()-1; i++) {
+        if(s[i]=='\\'&&s[i+1]=='n'){
+            cout<<str<<"\n";
+        }
+        str+=s[i];
+
+    }
+}
+bool checkBackSlashN(string s){
+    for (int i = 0; i < s.length(); i++) {
+        if(s[i]=='\n'){
+            return false;
+        }
+    }
+    return true;
+}
 /**
  * This function connects between the server and the client
  * Sends the user input to the server and getting the classification
@@ -251,14 +313,19 @@ void sendVector(string ip, int port) {
             connectionProblem();
             break;
         }
+        //if(checkBackSlashN())
             cout<<s<<endl;
+
+
 
         if(s==""){
             // getting the input from the user
             string userInput;
             getline(cin, userInput);
-            if(userInput=="1"){
+            if(userInput=="1") {
                 case1(sock);
+            }else if(userInput=="5"){
+                case5(sock);
             }else if (!sendToServer(sock,userInput)) {
                 connectionProblem();
                 break;
@@ -293,7 +360,7 @@ void sendVector(string ip, int port) {
 //TODO - delete this
 int main(int argc, char *argv[]) {
     const string ip = "127.0.0.1";
-    const int port_no = 12342;
+    const int port_no = 12345;
     sendVector(ip, port_no);
     return 0;
 

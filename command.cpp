@@ -182,7 +182,18 @@ void results::execute(ShareData *data) {
  * @param data - ShareData object
  */
 void download::execute(ShareData *data) {
-    string results = dio->read();
+    if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
+        dio->write("please upload data.");
+    } else if (data->getAllUnClassVec().empty()) {
+        dio->write("please classify the data.");
+    } else {
+        int i = 1;
+        for (auto &clsVec: data->getAllUnClassVec()) {
+            dio->write(to_string(i) + "\t" + clsVec->getClass());
+            i++;
+        }
+        dio->write("");
+    }
 }
 
 /**
