@@ -24,6 +24,10 @@ CLI::~CLI() {
         delete command;
     }
 }
+
+/**
+ * This function starts prints the menu and execute the command based on user input
+ */
 void CLI::start() {
     string strInput;
     int intInput;
@@ -31,8 +35,8 @@ void CLI::start() {
     size_t i = 0;
     while (commands[i]->getDes()[0] != '8') {
         dio->write("Welcome to the KNN Classifier Server. Please choose an option:");
-        for (int j = 0; j < commands.size(); ++j) {
-            dio->write(commands[j]->getDes());
+        for (auto & command : commands) {
+            dio->write(command->getDes());
         }
         dio->write("");
         strInput = dio->read();
@@ -48,6 +52,7 @@ void CLI::start() {
         }
     }
 }
+
 /**
  * This function presents the selection options to the user
  */

@@ -13,17 +13,6 @@ using std::string;
 using std::vector;
 
 /**
- * printing the results in the proper way
- * @param num the number we are printing
- */
-void printResult(double num) {
-    if (floor(num) == ceil(num)) {
-        cout << num << ".0" << endl;
-    } else {
-        cout << num << endl;
-    }
-}
-/**
  * Minkowski - Euclidean - Manhattan Distance
  * Since both equations (Euclidean and Manhattan) are a special case
  * of the Minkowski equations, we will use a helper function

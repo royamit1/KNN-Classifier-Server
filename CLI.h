@@ -8,11 +8,7 @@
 
 using namespace std;
 
-/**
- *
- */
 class CLI {
-
 private:
     vector<command *> commands;
     DefaultIO *dio;

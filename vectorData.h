@@ -3,7 +3,9 @@
 #define YOAV_ROY_ASS3_REPO_VECTORDATA_H
 
 #include "string"
+
 using namespace std;
+
 class vectorData {
 private:
     string distance;

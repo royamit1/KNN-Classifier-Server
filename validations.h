@@ -22,8 +22,6 @@ vector<double> fillVectorByDelim(const string &strVec, char delim);
 
 vector<classifiedVector *> stringToVec(string file_name, bool flag);
 
-vector<classifiedVector *> fileToVec(string file_name, bool flag);
-
 string getClass(vector<classifiedVector> nearestVecs);
 
 bool check_valid_dis(string dis);

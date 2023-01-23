@@ -84,6 +84,5 @@ void disVector::isDis(const string &newDis) {
  * @return distances vector
  */
 vector<distanceAlgo *> disVector::getDistances() const {
-
     return this->distances;
 }

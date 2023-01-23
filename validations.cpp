@@ -5,7 +5,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "distances.h"
 #include "disVector.h"
 #include "classifiedVector.h"
 #include "vectorsDataStruct.h"
@@ -125,22 +124,26 @@ vector<double> fillVectorByDelim(const string &strVec, char delim) {
 }
 
 /**
- *
- * @param file_name
- * @param flag
- * @return
+ * This function takes a string of all vectors separated by '@' and returns and vector of all classified vectors
+ * Here we make vectors from the classified file and also from the unclassified file (the classification is empty).
+ * @param strData - string of all the vectors from the file
+ * @param flag - true if the vectors classified, false if unclassified
+ * @return - vector<classifiedVector *>
  */
 vector<classifiedVector *> stringToVec(string strData, bool flag) {
     int i = 0;
     vector<classifiedVector *> allClassVec;
     vector<double> rowVec;
 
+    // the '$' tells us when it's the end of the data in the file
     while (strData[i] != '$') {
         string newVec;
+        // the '@' separates between vectors
         while (strData[i] != '@') {
             newVec += strData[i];
             i++;
         }
+        // if true - the vectors are classified.
         if (flag) {
             int index = newVec.find_last_of(',');
             string cls = newVec.substr(index + 1, newVec.length() - (index + 1));
@@ -154,7 +157,9 @@ vector<classifiedVector *> stringToVec(string strData, bool flag) {
                 illegal();
             }
             allClassVec.push_back(classVec);
-        } else {
+        }
+        // if false - the vectors are unclassified.
+        else {
             rowVec = fillVectorByDelim(
                     newVec.substr(0, newVec.length()), ',');
             classifiedVector *classVec = new classifiedVector(rowVec, "", rowVec.size());
@@ -166,53 +171,6 @@ vector<classifiedVector *> stringToVec(string strData, bool flag) {
             allClassVec.push_back(classVec);
         }
         i++;
-    }
-    return allClassVec;
-}
-
-/**
- * Creating a vector of classified vectors, where each
- * classified vector is a single row in the file
- * @param file_name
- * @return - a single vector that contains all the classified vectors
- */
-vector<classifiedVector *> fileToVec(string file_name, bool flag) {
-    vector<classifiedVector *> allClassVec;
-    vector<double> rowVec;
-    string line, word;
-
-    fstream file(file_name, ios::in);
-    if (file.is_open()) {
-        while (getline(file, line)) {
-            if (flag) {
-                int index = line.find_last_of(',');
-                string cls = line.substr(index + 1, line.length() - 1);
-                // create a classification vector for each row
-                // and push them into a vector of classified vectors.
-                rowVec = fillVectorByDelim(
-                        line.substr(0, index), ',');
-                classifiedVector *classVec = new classifiedVector(rowVec, cls, rowVec.size());
-                // check if the vectors in the file have the same size
-                if (!allClassVec.empty() && (classVec->getLen() !=
-                                             allClassVec[allClassVec.size() - 1]->getLen())) {
-                    illegal();
-                }
-                allClassVec.push_back(classVec);
-            } else {
-                rowVec = fillVectorByDelim(
-                        line.substr(0, line.length()), ',');
-                classifiedVector *classVec = new classifiedVector(rowVec, "", rowVec.size());
-                // check if the vectors in the file have the same size
-                if (!allClassVec.empty() && (classVec->getLen() !=
-                                             allClassVec[allClassVec.size() - 1]->getLen())) {
-                    illegal();
-                }
-                allClassVec.push_back(classVec);
-            }
-        }
-    } else {
-        cout << "no such directory";
-        exit(1);
     }
     return allClassVec;
 }
@@ -330,7 +288,6 @@ int checkAlgoSettingsInput(const string &userInput) {
     }
     return count;
 }
-
 
 /**
  * This function gets a string of the user input, and checks the validation of every parameter
