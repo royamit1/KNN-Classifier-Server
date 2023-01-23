@@ -1,9 +1,9 @@
 all: server.out client.out
 
-server.out: server.o vectorData.o validations.o CLI.h command.h connectionUtil.h vectorsDataStruct.o distanceAlgo.o classifiedVector.o disVector.o vecComparator.o distances.o
+server.out: server.o vectorData.o validations.o CLI.o command.o connectionUtil.o vectorsDataStruct.o distanceAlgo.o classifiedVector.o disVector.o vecComparator.o distances.o
 	g++ -std=c++11 -pthread server.o vectorData.o validations.o CLI.o command.o connectionUtil.o vectorsDataStruct.o distanceAlgo.o classifiedVector.o disVector.o vecComparator.o distances.o -o server.out
 
-client.out: client.o vectorData.o validations.o CLI.h command.h connectionUtil.h vectorsDataStruct.o distanceAlgo.o classifiedVector.o disVector.o vecComparator.o distances.o
+client.out: client.o vectorData.o validations.o CLI.o command.o connectionUtil.o vectorsDataStruct.o distanceAlgo.o classifiedVector.o disVector.o vecComparator.o distances.o
 	g++ -std=c++11 -pthread client.o vectorData.o validations.o CLI.o command.o connectionUtil.o vectorsDataStruct.o distanceAlgo.o classifiedVector.o disVector.o vecComparator.o distances.o -o client.out
 
 server.o: server.cpp validations.h
