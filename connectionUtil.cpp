@@ -59,7 +59,7 @@ void SocketIO::write(string s) {
     char buffer[BUFFERSIZE] = "\0";
     strcpy(buffer, s.c_str());
     send(client_sock, buffer, s.length()+1, 0);
-    usleep(1000);
+    usleep(100);
 }
 
 /**
