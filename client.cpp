@@ -31,24 +31,29 @@ string convertChar(char *a, int size) {
     }
     return s;
 }
+
+/**
+ *
+ * @param s
+ */
 void printWithoutNull(string &s) {
-    string str=s,word;
-    s="\0";
-    for (int i = 0; i < str.length() ; i++) {
+    string str = s, word;
+    s = "\0";
+    for (int i = 0; i < str.length(); i++) {
         if (str[i] == NULL) {
-            if(s!=""){
+            if (s != "") {
                 cout << s << "\n";
             }
-            s="\0";
-        } else{
-            s+=str[i];
+            s = "\0";
+        } else {
+            s += str[i];
         }
     }
-    if(s!=""){
+    if (s != "") {
         cout << s << "\n";
     }
-    if(str[str.length()-1]==NULL){
-        s="";
+    if (str[str.length() - 1] == NULL) {
+        s = "";
     }
 }
 
@@ -65,6 +70,7 @@ bool checkNull(string s) {
     }
     return false;
 }
+
 /**
  * Check if every part of the ip (separated by a dot) is valid (e.g. 192.68.24.1)
  * @param partIp - a part of the full ip number
@@ -161,16 +167,23 @@ bool check_valid_port(char *port) {
 /**
  * This function prints "connection problem"
  */
-void connectionProblem(){
+void connectionProblem() {
     cout << "connection problem" << endl;
 }
-bool fileToString(string &file_name,string &s) {
+
+/**
+ *
+ * @param file_name
+ * @param s
+ * @return
+ */
+bool fileToString(string &file_name, string &s) {
     string line;
     fstream file(file_name, ios::in);
     if (file.is_open()) {
         while (getline(file, line)) {
-           s+=line;
-           s+='@';
+            s += line;
+            s += '@';
         }
     } else {
         return false;
@@ -193,13 +206,13 @@ void case1(int sock) {
             getline(cin, userInput);
             bool isPath = fileToString(userInput, tempInput);
             if (isPath) {
-                if (!sendToServer(sock,tempInput)) {
+                if (!sendToServer(sock, tempInput)) {
                     connectionProblem();
                     break;
                 }
             } else {
-                cout<< "invalid path\n";
-                userInput="invalid path";
+                cout << "invalid path\n";
+                userInput = "invalid path";
                 if (!sendToServer(sock, userInput)) {
                     connectionProblem();
                     break;
@@ -220,10 +233,20 @@ void case1(int sock) {
             connectionProblem();
             break;
         }
-        if(checkNull(s)){
+        if (checkNull(s)) {
+            if (s.length() >= 3) {
+                if (s[0] == '%') {
+                    cout << "The lengths of the vectors is not equal9999" << "\n";
+                    return;
+                }
+            }
             flag++;
             printWithoutNull(s);
-        } else{
+        } else {
+            if (s == "%%%") {
+                cout << "The lengths of the vectors is not e999qual" << "\n";
+                return;
+            }
             cout << s << endl;
         }
         flag++;
@@ -307,8 +330,8 @@ void case5(int sock) {
             connectionProblem();
             break;
         }
-        if(s=="please upload data."||s=="please classify the data."){
-            cout <<s<<endl;
+        if (s == "please upload data." || s == "please classify the data.") {
+            cout << s << endl;
             return;
         }
         if (s == "") {
@@ -318,43 +341,35 @@ void case5(int sock) {
             t.detach();
             return;
         }
-        if(checkNull(s)){
-                string str=s,word;
-                s="\0";
-                for (int i = 0; i < str.length(); i++) {
-                    if (str[i] == NULL) {
-                        allData += s;
-                        allData += "@";
-                        s="\0";
-                    } else{
-                        s+=str[i];
-                    }
-                }
-                if(s!=""){
+        if (checkNull(s)) {
+            string str = s, word;
+            s = "\0";
+            for (int i = 0; i < str.length(); i++) {
+                if (str[i] == NULL) {
                     allData += s;
                     allData += "@";
+                    s = "\0";
+                } else {
+                    s += str[i];
                 }
+            }
+            if (s != "") {
+                allData += s;
+                allData += "@";
+            }
 
-                if(str[str.length()-1]==NULL){
-                    s="";
-                }
+            if (str[str.length() - 1] == NULL) {
+                s = "";
+            }
 
-        } else{
-            if(s!=""){
+        } else {
+            if (s != "") {
                 allData += s;
                 allData += "@";
             }
         }
-
-
     }
 }
-
-/**
- *
- * @param s
- */
-
 
 /**
  * This function connects between the server and the client
@@ -386,16 +401,13 @@ void sendVector(string ip, int port) {
             connectionProblem();
             break;
         }
-        if(checkNull(s)){
+        if (checkNull(s)) {
             printWithoutNull(s);
-        } else{
-            if(s!=""){
+        } else {
+            if (s != "") {
                 cout << s << endl;
             }
         }
-
-
-
         if (s == "") {
             // getting the input from the user
             string userInput;
@@ -404,45 +416,43 @@ void sendVector(string ip, int port) {
                 case1(sock);
             } else if (userInput == "5") {
                 case5(sock);
-            }else if(userInput=="8"){
+            } else if (userInput == "8") {
                 break;
-            }else if (!sendToServer(sock, userInput)) {
+            } else if (!sendToServer(sock, userInput)) {
                 connectionProblem();
                 break;
             }
         }
-
-
     }
     close(sock);
     return;
 }
 
-/**
- * This function is the main function in client
- */
-int main(int argc, char *argv[]) {
-    const string ip = argv[1];
-    if (!check_valid_ip(argv[1])) {
-        cout << "Invalid Input" << endl;
-        exit(1);
-    }
-    if (!check_valid_port(argv[2])) {
-        cout << "Invalid Input" << endl;
-        exit(1);
-    }
-
-    const int port_no = stoi(argv[2]);
-
-    sendVector(ip, port_no);
-    return 0;
-}
-//TODO - delete this
-
-
+///**
+// * This function is the main function in client
+// */
 //int main(int argc, char *argv[]) {
-//    const string ip = "127.0.0.1";
-//    const int port_no = 12345;
+//    const string ip = argv[1];
+//    if (!check_valid_ip(argv[1])) {
+//        cout << "Invalid Input" << endl;
+//        exit(1);
+//    }
+//    if (!check_valid_port(argv[2])) {
+//        cout << "Invalid Input" << endl;
+//        exit(1);
+//    }
+//
+//    const int port_no = stoi(argv[2]);
+//
 //    sendVector(ip, port_no);
 //    return 0;
 //}
+
+int main(int argc, char *argv[]) {
+    const string ip = "127.0.0.1";
+    const int port = 12351;
+    sendVector(ip, port);
+    return 0;
+}
+
+
