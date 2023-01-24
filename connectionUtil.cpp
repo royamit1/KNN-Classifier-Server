@@ -63,21 +63,6 @@ void SocketIO::write(string s) {
 }
 
 /**
- * converts character array to string and returns it
- * @param a - the char array
- * @param size - size of the array
- * @return - the string
- */
-string convertCharToString(char *a, int size) {
-    int i;
-    string s = "";
-    for (i = 0; i < size; i++) {
-        s = s + a[i];
-    }
-    return s;
-}
-
-/**
  * getter for the path of the classified vectors file
  * @return - the path of the classified vectors file
  */

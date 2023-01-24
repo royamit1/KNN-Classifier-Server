@@ -77,11 +77,12 @@ exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
  */
 void update::execute(ShareData *data) {
     string userInput;
+
     if (data->getOptions()[0] == 1) {
         data->setOptions(2, 0);
     }
 
-    //TODO - check if path is valid
+    bool valid = true;
 
     dio->write("Please upload your local train CSV file.");
 
@@ -90,7 +91,11 @@ void update::execute(ShareData *data) {
         return;
     }
     data->setClassifiedData(userInput + '$');
-    data->setAllClassVec(stringToVec(data->getClassifiedData(), true));
+    data->setAllClassVec(stringToVec(data->getClassifiedData(), true, valid));
+    if (!valid) {
+        dio->write("The lengths of the vectors is not equal");
+        return;
+    }
 
     dio->write("Upload complete.");
     dio->write("Please upload your local test CSV file.");
@@ -100,7 +105,11 @@ void update::execute(ShareData *data) {
         return;
     }
     data->setUnClassifiedData(userInput + '$');
-    data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false));
+    data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false, valid));
+    if (!valid) {
+        dio->write("%%%");
+        return;
+    }
 
     dio->write("Upload complete.");
 
@@ -148,12 +157,13 @@ void algoSettings::execute(ShareData *data) {
  */
 void classify::execute(ShareData *data) {
 
+    bool valid = true;
+
     if (data->getOptions()[0] == 0) {
         dio->write("please upload data.");
-    }
-    else {
-        data->setAllClassVec(stringToVec(data->getClassifiedData(), true));
-        data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false));
+    } else {
+        data->setAllClassVec(stringToVec(data->getClassifiedData(), true, valid));
+        data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false, valid));
         if (data->getAllClassVec().size() < data->getK()) {
             dio->write("invalid input - k is greater than the number of classified vectors.");
         } else {
@@ -183,8 +193,7 @@ void results::execute(ShareData *data) {
         dio->write("please upload data.");
     } else if (data->getOptions()[2] == 0) {
         dio->write("please classify the data.");
-    }
-    else {
+    } else {
         int i = 1;
         for (auto &clsVec: data->getAllUnClassVec()) {
             dio->write(to_string(i) + "\t" + clsVec->getClass());
@@ -207,8 +216,7 @@ void download::execute(ShareData *data) {
         dio->write("please upload data.");
     } else if (data->getOptions()[2] == 0) {
         dio->write("please classify the data.");
-    }
-    else {
+    } else {
         int i = 1;
         for (auto &clsVec: data->getAllUnClassVec()) {
             dio->write(to_string(i) + "\t" + clsVec->getClass());
