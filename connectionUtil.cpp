@@ -174,20 +174,19 @@ void ShareData::setAllUnClassVec(vector<classifiedVector *> allUnClsVec) {
 }
 
 /**
- *
- * @return
+ * Getter for a vector for flags of execute commands
+ * @return - the vector
  */
 vector<int> ShareData::getOptions() const {
     return this->options;
 }
 
 /**
- *
- * @param i
- * @param n
- * @return
+ * Setter to turn on and off the flag of execute command
+ * @param i - the index in the vector
+ * @param n - on and off number (0 or 1)
  */
-vector<int> ShareData::setOptions(int i, int n) {
+void ShareData::setOptions(int i, int n) {
     this->options[i] = n;
 }
 

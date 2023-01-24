@@ -97,7 +97,7 @@ public:
 
     vector<int> getOptions() const;
 
-    vector<int> setOptions(int i, int n);
+    void setOptions(int i, int n);
 
 };
 

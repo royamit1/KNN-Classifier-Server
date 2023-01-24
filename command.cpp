@@ -85,8 +85,8 @@ void update::execute(ShareData *data) {
 
     dio->write("Please upload your local train CSV file.");
 
-    userInput=dio->read();
-    if(userInput=="invalid path"){
+    userInput = dio->read();
+    if (userInput == "invalid path") {
         return;
     }
     data->setClassifiedData(userInput + '$');
@@ -95,8 +95,8 @@ void update::execute(ShareData *data) {
     dio->write("Upload complete.");
     dio->write("Please upload your local test CSV file.");
 
-    userInput=dio->read();
-    if(userInput=="invalid path"){
+    userInput = dio->read();
+    if (userInput == "invalid path") {
         return;
     }
     data->setUnClassifiedData(userInput + '$');
@@ -133,6 +133,7 @@ void algoSettings::execute(ShareData *data) {
         } else {
             data->setK(stoi(userInput.substr(0, first_index)));
             data->setMetric(userInput.substr(first_index + 1, userInput.length() - (first_index + 1)));
+            data->setOptions(2, 0);
         }
     }
     data->setOptions(1, 1);
@@ -147,13 +148,9 @@ void algoSettings::execute(ShareData *data) {
  */
 void classify::execute(ShareData *data) {
 
-    if (data->getOptions()[0] != 1) {
+    if (data->getOptions()[0] == 0) {
         dio->write("please upload data.");
     }
-
-//    if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
-//        dio->write("please upload data.");
-//    }
     else {
         data->setAllClassVec(stringToVec(data->getClassifiedData(), true));
         data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false));
@@ -168,8 +165,8 @@ void classify::execute(ShareData *data) {
                                           data->getAllUnClassVec()[i]->getCurrVec()));
             }
             dio->write("classifying data complete.");
+            data->setOptions(2, 1);
         }
-        data->setOptions(2, 1);
     }
 }
 
@@ -182,19 +179,11 @@ void classify::execute(ShareData *data) {
  */
 void results::execute(ShareData *data) {
 
-    if (data->getOptions()[0] != 1) {
+    if (data->getOptions()[0] == 0) {
         dio->write("please upload data.");
-    }
-    else if (data->getOptions()[2] != 1) {
+    } else if (data->getOptions()[2] == 0) {
         dio->write("please classify the data.");
     }
-
-//    if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
-//        dio->write("please upload data.");
-//    }
-//    else if (data->getAllUnClassVec()[0]->getClass().empty()) {
-//        dio->write("please classify the data.");
-//    }
     else {
         int i = 1;
         for (auto &clsVec: data->getAllUnClassVec()) {
@@ -214,19 +203,11 @@ void results::execute(ShareData *data) {
  */
 void download::execute(ShareData *data) {
 
-    if (data->getOptions()[0] != 1) {
+    if (data->getOptions()[0] == 0) {
         dio->write("please upload data.");
-    }
-    else if (data->getOptions()[2] != 1) {
+    } else if (data->getOptions()[2] == 0) {
         dio->write("please classify the data.");
     }
-
-//    if (data->getClassifiedData().empty() || data->getUnClassifiedData().empty()) {
-//        dio->write("please upload data.");
-//    }
-//    else if (data->getAllUnClassVec()[0]->getClass().empty()) {
-//        dio->write("please classify the data.");
-//    }
     else {
         int i = 1;
         for (auto &clsVec: data->getAllUnClassVec()) {
