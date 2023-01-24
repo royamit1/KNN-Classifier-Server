@@ -63,6 +63,7 @@ private:
     string unClassifiedData;
     vector<classifiedVector *> allClassVec;
     vector<classifiedVector *> allUnClassVec;
+    vector<int> options = {0, 0, 0, 0, 0};
     int k = 5;
     string metric = "AUC";
 
@@ -93,6 +94,10 @@ public:
     vector<classifiedVector *> getAllUnClassVec() const;
 
     void setAllUnClassVec(vector<classifiedVector *> allUnClassVec);
+
+    vector<int> getOptions() const;
+
+    vector<int> setOptions(int i, int n);
 
 };
 

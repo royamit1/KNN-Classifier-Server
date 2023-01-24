@@ -1,6 +1,7 @@
 
 #include<iostream>
 #include <string.h>
+#include <utility>
 #include <vector>
 #include "connectionUtil.h"
 
@@ -74,7 +75,7 @@ string ShareData::getClassifiedData() const {
  * @param s - new string of all classified vectors
  */
 void ShareData::setClassifiedData(string s) {
-    this->classifiedData = s;
+    this->classifiedData = std::move(s);
 }
 
 /**
@@ -90,7 +91,7 @@ string ShareData::getUnClassifiedData() const {
  * @param s - new string of all unclassified vectors
  */
 void ShareData::setUnClassifiedData(string s) {
-    this->unClassifiedData = s;
+    this->unClassifiedData = std::move(s);
 }
 
 /**
@@ -122,7 +123,7 @@ string ShareData::getMetric() const {
  * @param met - a new metric
  */
 void ShareData::setMetric(string met) {
-    this->metric = met;
+    this->metric = std::move(met);
 }
 
 /**
@@ -138,7 +139,7 @@ vector<classifiedVector *> ShareData::getAllClassVec() const {
  * @param allClsVec - vector that holds all the classified vectors
  */
 void ShareData::setAllClassVec(vector<classifiedVector *> allClsVec) {
-    this->allClassVec = allClsVec;
+    this->allClassVec = std::move(allClsVec);
 }
 
 /**
@@ -154,7 +155,25 @@ vector<classifiedVector *> ShareData::getAllUnClassVec() const {
  * @param allUnClsVec - vector that holds all the unclassified vectors
  */
 void ShareData::setAllUnClassVec(vector<classifiedVector *> allUnClsVec) {
-    this->allUnClassVec = allUnClsVec;
+    this->allUnClassVec = std::move(allUnClsVec);
+}
+
+/**
+ *
+ * @return
+ */
+vector<int> ShareData::getOptions() const {
+    return this->options;
+}
+
+/**
+ *
+ * @param i
+ * @param n
+ * @return
+ */
+vector<int> ShareData::setOptions(int i, int n) {
+    this->options[i] = n;
 }
 
 /**
