@@ -158,7 +158,7 @@ vector<classifiedVector *> stringToVec(string strData, bool flag) {
             }
             allClassVec.push_back(classVec);
         }
-        // if false - the vectors are unclassified.
+            // if false - the vectors are unclassified.
         else {
             rowVec = fillVectorByDelim(
                     newVec.substr(0, newVec.length()), ',');

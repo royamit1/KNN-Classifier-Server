@@ -33,9 +33,9 @@ void CLI::start() {
     int intInput;
     ShareData data;
     size_t i = 1;
-    while (commands[i-1]->getDes()[0] != '8') {
+    while (commands[i - 1]->getDes()[0] != '8') {
         dio->write("Welcome to the KNN Classifier Server. Please choose an option:");
-        for (auto & command : commands) {
+        for (auto &command: commands) {
             dio->write(command->getDes());
         }
         dio->write("");
