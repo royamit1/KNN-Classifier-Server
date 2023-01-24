@@ -330,15 +330,20 @@ void case5(int sock) {
                         s+=str[i];
                     }
                 }
-                allData += s;
-                allData += "@";
+                if(s!=""){
+                    allData += s;
+                    allData += "@";
+                }
+
                 if(str[str.length()-1]==NULL){
                     s="";
                 }
 
         } else{
-            allData += s;
-            allData += "@";
+            if(s!=""){
+                allData += s;
+                allData += "@";
+            }
         }
 
 
@@ -416,28 +421,28 @@ void sendVector(string ip, int port) {
 /**
  * This function is the main function in client
  */
-//int main(int argc, char *argv[]) {
-//    const string ip = argv[1];
-//    if (!check_valid_ip(argv[1])) {
-//        cout << "Invalid Input" << endl;
-//        exit(1);
-//    }
-//    if (!check_valid_port(argv[2])) {
-//        cout << "Invalid Input" << endl;
-//        exit(1);
-//    }
-//
-//    const int port_no = stoi(argv[2]);
-//
-//    sendVector(ip, port_no);
-//    return 0;
-//}
-//TODO - delete this
-
-
 int main(int argc, char *argv[]) {
-    const string ip = "127.0.0.1";
-    const int port_no = 12345;
+    const string ip = argv[1];
+    if (!check_valid_ip(argv[1])) {
+        cout << "Invalid Input" << endl;
+        exit(1);
+    }
+    if (!check_valid_port(argv[2])) {
+        cout << "Invalid Input" << endl;
+        exit(1);
+    }
+
+    const int port_no = stoi(argv[2]);
+
     sendVector(ip, port_no);
     return 0;
 }
+//TODO - delete this
+
+
+//int main(int argc, char *argv[]) {
+//    const string ip = "127.0.0.1";
+//    const int port_no = 12345;
+//    sendVector(ip, port_no);
+//    return 0;
+//}
