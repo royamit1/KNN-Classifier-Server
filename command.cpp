@@ -76,7 +76,7 @@ exitProg::exitProg(DefaultIO *dio) : command(dio, "8. exit") {}
  * @param data - ShareData object
  */
 void update::execute(ShareData *data) {
-
+    string userInput;
     if (data->getOptions()[0] == 1) {
         data->setOptions(2, 0);
     }
@@ -85,13 +85,21 @@ void update::execute(ShareData *data) {
 
     dio->write("Please upload your local train CSV file.");
 
-    data->setClassifiedData(dio->read() + '$');
+    userInput=dio->read();
+    if(userInput=="invalid path"){
+        return;
+    }
+    data->setClassifiedData(userInput + '$');
     data->setAllClassVec(stringToVec(data->getClassifiedData(), true));
 
     dio->write("Upload complete.");
     dio->write("Please upload your local test CSV file.");
 
-    data->setUnClassifiedData(dio->read() + '$');
+    userInput=dio->read();
+    if(userInput=="invalid path"){
+        return;
+    }
+    data->setUnClassifiedData(userInput + '$');
     data->setAllUnClassVec(stringToVec(data->getUnClassifiedData(), false));
 
     dio->write("Upload complete.");
