@@ -93,7 +93,7 @@ void update::execute(ShareData *data) {
     data->setClassifiedData(userInput + '$');
     data->setAllClassVec(stringToVec(data->getClassifiedData(), true, valid));
     if (!valid) {
-        dio->write("The lengths of the vectors is not equal");
+        dio->write("%%%");
         return;
     }
 

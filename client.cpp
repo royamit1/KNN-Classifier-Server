@@ -236,7 +236,7 @@ void case1(int sock) {
         if (checkNull(s)) {
             if (s.length() >= 3) {
                 if (s[0] == '%') {
-                    cout << "The lengths of the vectors is not equal9999" << "\n";
+                    cout << "The lengths of the vectors is not equal" << "\n";
                     return;
                 }
             }
@@ -244,7 +244,7 @@ void case1(int sock) {
             printWithoutNull(s);
         } else {
             if (s == "%%%") {
-                cout << "The lengths of the vectors is not e999qual" << "\n";
+                cout << "The lengths of the vectors is not equal" << "\n";
                 return;
             }
             cout << s << endl;
@@ -450,7 +450,7 @@ void sendVector(string ip, int port) {
 
 int main(int argc, char *argv[]) {
     const string ip = "127.0.0.1";
-    const int port = 12351;
+    const int port = 12345;
     sendVector(ip, port);
     return 0;
 }
