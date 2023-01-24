@@ -130,7 +130,7 @@ vector<double> fillVectorByDelim(const string &strVec, char delim) {
  * @param flag - true if the vectors classified, false if unclassified
  * @return - vector<classifiedVector *>
  */
-vector<classifiedVector *> stringToVec(string strData, bool flag) {
+vector<classifiedVector *> stringToVec(string strData, bool flag, bool &valid) {
     int i = 0;
     vector<classifiedVector *> allClassVec;
     vector<double> rowVec;
@@ -152,9 +152,8 @@ vector<classifiedVector *> stringToVec(string strData, bool flag) {
             rowVec = fillVectorByDelim(newVec.substr(0, index), ',');
             classifiedVector *classVec = new classifiedVector(rowVec, cls, rowVec.size());
             // check if the vectors in the file have the same size
-            if (!allClassVec.empty() && (classVec->getLen() !=
-                                         allClassVec[allClassVec.size() - 1]->getLen())) {
-                illegal();
+            if (!allClassVec.empty() && (classVec->getLen() != allClassVec[0]->getLen())) {
+                valid = false;
             }
             allClassVec.push_back(classVec);
         }
@@ -164,9 +163,8 @@ vector<classifiedVector *> stringToVec(string strData, bool flag) {
                     newVec.substr(0, newVec.length()), ',');
             classifiedVector *classVec = new classifiedVector(rowVec, "", rowVec.size());
             // check if the vectors in the file have the same size
-            if (!allClassVec.empty() && (classVec->getLen() !=
-                                         allClassVec[allClassVec.size() - 1]->getLen())) {
-                illegal();
+            if (!allClassVec.empty() && (classVec->getLen() != allClassVec[0]->getLen())) {
+                valid = false;
             }
             allClassVec.push_back(classVec);
         }
