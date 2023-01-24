@@ -241,6 +241,8 @@ void handleThread(int client_sock) {
     newSock.setClientSock(client_sock);
     CLI currentCli(&newSock);
     currentCli.start();
+    int x=0;
+
 }
 
 void handleClients(int sock) {
