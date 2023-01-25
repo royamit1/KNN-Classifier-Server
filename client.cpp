@@ -33,7 +33,7 @@ string convertChar(char *a, int size) {
 }
 
 /**
- *
+ * parsing strings with null, and print every part in a new line
  * @param s
  */
 void printWithoutNull(string &s) {
@@ -281,7 +281,7 @@ bool sendToServer(int sock, string userInput) {
 
 
 /**
- *
+ * recive the data from the server
  * @param sock
  * @param s
  * @return
