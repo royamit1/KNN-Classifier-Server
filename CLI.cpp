@@ -40,11 +40,11 @@ void CLI::start() {
         }
         dio->write("");
         strInput = dio->read();
-        if (strInput[0] >= '1' && strInput[0] <= '5') {
+        if (strInput[0] >= '1' && strInput[0] <= '5' && strInput.size() == 1) {
             intInput = stoi(strInput);
             commands[intInput - 1]->execute(&data);
             i = intInput;
-        } else if (strInput[0] == '8') {
+        } else if (strInput[0] == '8' && strInput.size() == 1) {
             commands[commands.size() - 1]->execute(&data);
             i = commands.size();
         } else {
@@ -52,14 +52,3 @@ void CLI::start() {
         }
     }
 }
-
-/**
- * This function presents the selection options to the user
- */
-//void CLI::start() {
-//    while (true){
-//        string x=dio->read();
-//        cout << x<<"\n";
-//        dio->write(x);
-//    }
-//}

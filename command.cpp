@@ -81,11 +81,8 @@ void update::execute(ShareData *data) {
     if (data->getOptions()[0] == 1) {
         data->setOptions(2, 0);
     }
-
     bool valid = true;
-
     dio->write("Please upload your local train CSV file.");
-
     userInput = dio->read();
     if (userInput == "invalid path") {
         return;
@@ -96,10 +93,8 @@ void update::execute(ShareData *data) {
         dio->write("The lengths of the vectors is not equal");
         return;
     }
-
     dio->write("Upload complete.");
     dio->write("Please upload your local test CSV file.");
-
     userInput = dio->read();
     if (userInput == "invalid path") {
         return;
@@ -110,9 +105,7 @@ void update::execute(ShareData *data) {
         dio->write("%%%");
         return;
     }
-
     dio->write("Upload complete.");
-
     data->setOptions(0, 1);
 }
 
@@ -158,7 +151,6 @@ void algoSettings::execute(ShareData *data) {
 void classify::execute(ShareData *data) {
 
     bool valid = true;
-
     if (data->getOptions()[0] == 0) {
         dio->write("please upload data.");
     } else {
