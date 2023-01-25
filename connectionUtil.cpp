@@ -58,12 +58,12 @@ string SocketIO::read() {
 void SocketIO::write(string s) {
     char buffer[BUFFERSIZE] = "\0";
     strcpy(buffer, s.c_str());
-    send(client_sock, buffer, s.length()+1, 0);
+    send(client_sock, buffer, s.length() + 1, 0);
     usleep(100);
 }
 
 /**
- * getter for the path of the classified vectors file
+ * Getter for the path of the classified vectors file
  * @return - the path of the classified vectors file
  */
 string ShareData::getClassifiedData() const {
@@ -71,7 +71,7 @@ string ShareData::getClassifiedData() const {
 }
 
 /**
- * setter for the string of all classified vectors from the file
+ * Setter for the string of all classified vectors from the file
  * @param s - new string of all classified vectors
  */
 void ShareData::setClassifiedData(string s) {
@@ -79,7 +79,7 @@ void ShareData::setClassifiedData(string s) {
 }
 
 /**
- * getter for the string of all unclassified vectors from the file
+ * Getter for the string of all unclassified vectors from the file
  * @return - the string of all unclassified vectors
  */
 string ShareData::getUnClassifiedData() const {
@@ -87,7 +87,7 @@ string ShareData::getUnClassifiedData() const {
 }
 
 /**
- * setter for the string of all unclassified vectors from the file
+ * Setter for the string of all unclassified vectors from the file
  * @param s - new string of all unclassified vectors
  */
 void ShareData::setUnClassifiedData(string s) {
@@ -95,7 +95,7 @@ void ShareData::setUnClassifiedData(string s) {
 }
 
 /**
- * getter for the number of neighbors (k)
+ * Getter for the number of neighbors (k)
  * @return - the number of neighbors
  */
 int ShareData::getK() const {
@@ -103,7 +103,7 @@ int ShareData::getK() const {
 }
 
 /**
- * setter for the number of neighbors (k)
+ * Setter for the number of neighbors (k)
  * @param k - new number of neighbors
  */
 void ShareData::setK(int k) {
@@ -111,7 +111,7 @@ void ShareData::setK(int k) {
 }
 
 /**
- * getter for the metric
+ * Getter for the metric
  * @return - the metric
  */
 string ShareData::getMetric() const {
@@ -119,7 +119,7 @@ string ShareData::getMetric() const {
 }
 
 /**
- * setter for the metric
+ * Setter for the metric
  * @param met - a new metric
  */
 void ShareData::setMetric(string met) {
@@ -127,7 +127,7 @@ void ShareData::setMetric(string met) {
 }
 
 /**
- * getter for the classified vectors vector
+ * Getter for the classified vectors vector
  * @return vector that holds all the classified vectors
  */
 vector<classifiedVector *> ShareData::getAllClassVec() const {
@@ -135,7 +135,7 @@ vector<classifiedVector *> ShareData::getAllClassVec() const {
 }
 
 /**
- * setter for the classified vectors vector
+ * Setter for the classified vectors vector
  * @param allClsVec - vector that holds all the classified vectors
  */
 void ShareData::setAllClassVec(vector<classifiedVector *> allClsVec) {
@@ -143,7 +143,7 @@ void ShareData::setAllClassVec(vector<classifiedVector *> allClsVec) {
 }
 
 /**
- * getter for the unclassified vectors vector
+ * Getter for the unclassified vectors vector
  * @return vector that holds all the unclassified vectors
  */
 vector<classifiedVector *> ShareData::getAllUnClassVec() const {
@@ -151,7 +151,7 @@ vector<classifiedVector *> ShareData::getAllUnClassVec() const {
 }
 
 /**
- * setter for the unclassified vectors vector
+ * Setter for the unclassified vectors vector
  * @param allUnClsVec - vector that holds all the unclassified vectors
  */
 void ShareData::setAllUnClassVec(vector<classifiedVector *> allUnClsVec) {
