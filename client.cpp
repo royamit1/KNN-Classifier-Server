@@ -18,10 +18,10 @@
 using namespace std;
 
 /**
- *
- * @param a
- * @param size
- * @return
+ * This function converts to string
+ * @param a - char* type
+ * @param size - int number
+ * @return - string
  */
 string convertChar(char *a, int size) {
     int i;
@@ -58,9 +58,9 @@ void printWithoutNull(string &s) {
 }
 
 /**
- *
- * @param s
- * @return
+ * This function checks if the string contains NULL
+ * @param s - string
+ * @return - true if contains NULL, false otherwise
  */
 bool checkNull(string s) {
     for (int i = 0; i < s.length(); i++) {
@@ -172,10 +172,10 @@ void connectionProblem() {
 }
 
 /**
- *
- * @param file_name
- * @param s
- * @return
+ * This function reads the information in the file and creates a string of the information
+ * @param file_name - a files path
+ * @param s - string of the information
+ * @return - string of information
  */
 bool fileToString(string &file_name, string &s) {
     string line;
@@ -192,8 +192,8 @@ bool fileToString(string &file_name, string &s) {
 }
 
 /**
- *
- * @param sock
+ * This function handles the update command
+ * @param sock - number of socket
  */
 void case1(int sock) {
     int flag = 0;
@@ -294,9 +294,9 @@ bool receiveFromServer(int sock, string &s) {
 }
 
 /**
- *
- * @param allData
- * @param path
+ * This function takes a string and puts the information in a new file
+ * @param allData - string of information
+ * @param path - path of a new file
  */
 void uploadToFile(string allData, string path) {
     int i = 0;
@@ -317,8 +317,8 @@ void uploadToFile(string allData, string path) {
 }
 
 /**
- *
- * @param sock
+ * This function handles the download command
+ * @param sock - number of socket
  */
 void case5(int sock) {
     string s, allData;
