@@ -44,9 +44,9 @@ bool check_valid_port(char *port) {
 }
 
 /**
- *
+ * making the connection with the server
  * @param port
- * @return
+ * @return the socket
  */
 int makeConnection(int port) {
     bool flag = false;
@@ -73,7 +73,7 @@ int makeConnection(int port) {
 }
 
 /**
- *
+ * handle a specific thread
  * @param client_sock
  */
 void handleThread(int client_sock) {
@@ -86,7 +86,7 @@ void handleThread(int client_sock) {
 }
 
 /**
- *
+ * sending the clients to threads
  * @param sock
  */
 void handleClients(int sock) {
