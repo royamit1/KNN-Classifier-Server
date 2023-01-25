@@ -181,10 +181,15 @@ bool fileToString(string &file_name, string &s) {
     string line;
     fstream file(file_name, ios::in);
     if (file.is_open()) {
-        while (getline(file, line)) {
+        while (getline(file, line,'\r')) {
             s += line;
-            s += '@';
         }
+        for(int i=0;i<s.length();i++){
+            if(s[i]=='\n'){
+                s[i]='@';
+            }
+        }
+        s.append("@");
     } else {
         return false;
     }
@@ -273,6 +278,7 @@ bool sendToServer(int sock, string userInput) {
     }
     return true;
 }
+
 
 /**
  *
@@ -431,28 +437,26 @@ void sendVector(string ip, int port) {
 ///**
 // * This function is the main function in client
 // */
-//int main(int argc, char *argv[]) {
-//    const string ip = argv[1];
-//    if (!check_valid_ip(argv[1])) {
-//        cout << "Invalid Input" << endl;
-//        exit(1);
-//    }
-//    if (!check_valid_port(argv[2])) {
-//        cout << "Invalid Input" << endl;
-//        exit(1);
-//    }
-//
-//    const int port_no = stoi(argv[2]);
-//
-//    sendVector(ip, port_no);
-//    return 0;
-//}
-
 int main(int argc, char *argv[]) {
-    const string ip = "127.0.0.1";
-    const int port = 12345;
-    sendVector(ip, port);
-    return 0;
+   const string ip = argv[1];
+   if (!check_valid_ip(argv[1])) {
+       cout << "Invalid Input" << endl;
+       exit(1);
+   }
+   if (!check_valid_port(argv[2])) {
+       cout << "Invalid Input" << endl;
+       exit(1);
+   }
+   const int port_no = stoi(argv[2]);
+   sendVector(ip, port_no);
+   return 0;
 }
+
+// int main(int argc, char *argv[]) {
+//     const string ip = "127.0.0.1";
+//     const int port = 12345;
+//     sendVector(ip, port);
+//     return 0;
+// }
 
 
