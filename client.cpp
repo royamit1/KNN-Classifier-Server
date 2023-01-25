@@ -262,10 +262,10 @@ void case1(int sock) {
 }
 
 /**
- *
+ * sending to server the data
  * @param sock
  * @param userInput
- * @return
+ * @return true if the sendnig was succsecfull
  */
 bool sendToServer(int sock, string userInput) {
     userInput += '$';
