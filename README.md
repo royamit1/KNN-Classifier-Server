@@ -32,15 +32,24 @@ Finally, after the connection has been made, the client prints to the screen opt
 Each option works as described on the assignment page, and in the description of the functions in the code.  
 
 ### Implementation
-We will use a design pattern called `Command`, where each command in our software has its own class of type Command.  
-The `Command` class can define anything relevant to all commands in our system,
-and in particular an abstract execute command for activation.  
+We will use a design pattern called `Command`, where each command in our program has its own class of type Command.  
+The `Command` class is abstract and can define anything relevant to all commands in our system,
+in particular an abstract execute function for activation.  
+This function will have to be implemented by all the successors, in our case - the various commands in the program.  
+In addition to each command there is a description string.  
 Further to what is said in the project description section, the CLI object holds a vector that contains all the commands, and a `DefaultIO` object.  
+We would like to disconnect the dependency between the command and the input/output source.  
+For this we defined the abstract type `DefaultIO` whose successors will have to implement the read and write methods in their own way.  
+That way, we can enter different implementations of DefaultIO at runtime to the Command.  
+Note that this implementation is also open to expansion. Because if we want, for example, to read and write to files, then we can add an implementation to `DefaultIO`.    
+That way all the commands will not have to change and will work exactly the same.  
 We used the `CLI` class to separation between the initiator of the command (invoker) and the one who is going to be
 enabled (receiver).  
 All communication between the server and the client will take place using the TCP protocol.  
 
 When a client connects to the server, the server will send the client a menu of the server's functions:   
+we used an array of `Command`, went through each `Command` and printed its description. When the user selects the i-th   command, we will go to the i-th position in the array of commands, and call its execute function. this command  
+in turn, will continue the interaction with the user as needed.  
 1. The user will be given the option to type a path to his local csv file on the computer,  
 and after pressing enter the client will send the contents of the file to the server.  
 If the classified or unclassified vectors have different lengths, an error message will be received.  
