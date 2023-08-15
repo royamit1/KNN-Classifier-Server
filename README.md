@@ -2,34 +2,54 @@
 
 ## Table of Contents
 * [Project Description](#project-description)
-* [How To Compile](#how-to-compile)
+* [Course of the program](#course-of-the-program)
 * [How To Run](#how-to-run)
 * [Implementation](#implementation)
 * [Authors](#authors)
 
 ### Project Description
-In this assignment our server will have to handle several clients at the same time.   
-That is, at a given moment, the server can speak with several clients at the same time.  
-We would like our server to have a CLI (Command Line Interface). That is, when a client connects, he will see  
-textual menus that the server sent and through which the interaction between the server and the client will take place.  
-Further explanations regarding the server and the client, below.
+This project is a KNN (K-Nearest Neighbors) classifier implemented as a server and client that works on TCP sockets with multi-client support using threads. The classifier takes in a file of classified vectors and a file of test vectors, and can be configured to use a specific K and distance function. The classifier can then classify the test vectors and send the classified vectors either to the screen dialog or to a specified file.  
 
-### How To Compile
-In order to compile the code, use the command: `make`
+### Course of the program
+First, the server is being initialize, then clients can connect to the server (the number of clients dependes on how much clients the server can handle in hold, in our program can handle 5 clients by default).
 
-### How To Run
-The program should run as follows:  
-first, we run the server with the command `./server.out port`
-- port is the port number, chosen by the user, and can be a number between 0 and 65535
+Each client is being presented with a menu with various commands which includes:
+1. Upload an unclassified csv data file
+2. Algorithm settings
+3. Classifiy data
+4. Display results
+5. Download results
+8. Exit
 
-After the server is running, it's waiting for a connection from the client.
+#### Usage Flow
+Upload Data: Begin by uploading both the "Train" and "Test" CSV files.  
+Configure Algorithm: Optionally, customize the algorithm settings:
+- Adjust the number of neighbors (K).  
+- Select a distance metric from the available options: AUC, MAN, CHB, CAN, MIN.
 
-Next, we run the client with the command `./client.out ip port`
-- ip is the ipv4 address of the server so that a connection can be made with the server
-- port is the same port used by the server
+Run Classification: Initiate the KNN algorithm to classify vectors from the "Test" file using the vectors from the "Train" file.  
+Review or Save Results: Choose to either review the classification results directly on-screen or save them as a local file for further analysis.  
+Exit: Whenever you're done using the program, exit gracefully by selecting the exit option.  
 
-Finally, after the connection has been made, the client prints to the screen options received from the server.    
-Each option works as described on the assignment page, and in the description of the functions in the code.  
+
+### How To Run  
+
+```bash
+# Clone this repository :
+$ git clone https://github.com/royamit1/KNN-Classifier-Server.git
+
+# Go into the repository :
+$ cd KNN-Classifier-Server
+
+# Compile using makefile :
+$ make
+```
+
+Running the server:  
+<pre><code>$ ./server.out &#60port&#62                       // For example: ./server.out 12345</code></pre>
+Running the client:  
+<pre><code>$ ./client.out &#60ip address&#62 &#60server port&#62   // For example: ./client.out 127.0.0.1 12345</code></pre>
+
 
 ### Implementation
 We will use a design pattern called `Command`, where each command in our program has its own class of type Command.  
