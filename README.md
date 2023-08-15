@@ -2,37 +2,43 @@
 
 ## Table of Contents
 * [Project Description](#project-description)
-* [Course of the program](#course-of-the-program)
 * [How To Run](#how-to-run)
 * [Implementation](#implementation)
 * [Authors](#authors)
 
-### Project Description
+## Project Description
 This project is a KNN (K-Nearest Neighbors) classifier implemented as a server and client that works on TCP sockets with multi-client support using threads. The classifier takes in a file of classified vectors and a file of test vectors, and can be configured to use a specific K and distance function. The classifier can then classify the test vectors and send the classified vectors either to the screen dialog or to a specified file.  
 
-### Course of the program
+#### Course of the program
 First, the server is being initialize, then clients can connect to the server (the number of clients dependes on how much clients the server can handle in hold, in our program can handle 5 clients by default).
 
 Each client is being presented with a menu with various commands which includes:
-1. Upload an unclassified csv data file
-2. Algorithm settings
-3. Classifiy data
-4. Display results
-5. Download results
-8. Exit
+<pre><code>Welcome to the KNN Classifier Server. Please choose an option:
+1. upload an unclassified csv data file
+2. algorithm settings
+3. classify data
+4. display results
+5. download results
+8. exit</code></pre>
 
 #### Usage Flow
 Upload Data: Begin by uploading both the "Train" and "Test" CSV files.  
 Configure Algorithm: Optionally, customize the algorithm settings:
 - Adjust the number of neighbors (K).  
-- Select a distance metric from the available options: AUC, MAN, CHB, CAN, MIN.
+- Select a distance metric from the available options:
+  
+   <pre><code>"AUC" - Euclidean metric
+  "MAN" - Manhattan metric
+  "CHB" - Chebyshev metric
+  "CAN" - Canberra metric
+  "MIN" - Minkowski metric</code></pre></p>
 
 Run Classification: Initiate the KNN algorithm to classify vectors from the "Test" file using the vectors from the "Train" file.  
 Review or Save Results: Choose to either review the classification results directly on-screen or save them as a local file for further analysis.  
 Exit: Whenever you're done using the program, exit gracefully by selecting the exit option.  
 
 
-### How To Run  
+## How To Run  
 
 ```bash
 # Clone this repository :
@@ -51,7 +57,7 @@ Running the client:
 <pre><code>$ ./client.out &#60ip address&#62 &#60server port&#62   // For example: ./client.out 127.0.0.1 12345</code></pre>
 
 
-### Implementation
+## Implementation
 We will use a design pattern called `Command`, where each command in our program has its own class of type Command.  
 The `Command` class is abstract and can define anything relevant to all commands in our system,
 in particular an abstract execute function for activation.  
@@ -93,5 +99,5 @@ It's important to say that after each command (except for option 8), the main me
 The server, in this case, continues to the next connection (the server does not close).  
 
 ### Authors
-- Roy Amit
-- Yoav Shragay
+- [Roy Amit](https://github.com/royamit1)
+- [Yoav Shragay](https://github.com/yoavShragay)
