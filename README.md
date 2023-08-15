@@ -22,20 +22,20 @@ Each client is being presented with a menu with various commands which includes:
 8. exit</code></pre>
 
 #### Usage Flow
-Upload Data: Begin by uploading both the "Train" and "Test" CSV files.  
-Configure Algorithm: Optionally, customize the algorithm settings:
-- Adjust the number of neighbors (K).  
-- Select a distance metric from the available options:
-  
-   <pre><code>"AUC" - Euclidean metric
-  "MAN" - Manhattan metric
-  "CHB" - Chebyshev metric
-  "CAN" - Canberra metric
-  "MIN" - Minkowski metric</code></pre></p>
+1. Upload Data : Begin by uploading both the "Train" and "Test" CSV files.  
+2. Configure Algorithm : Optionally, customize the algorithm settings:
+   
+   - Adjust the number of neighbors (K).
+   - Select a distance metric from the available options:  
+    <pre><code> "AUC" - Euclidean metric
+    "MAN" - Manhattan metric
+    "CHB" - Chebyshev metric
+    "CAN" - Canberra metric
+    "MIN" - Minkowski metric</code></pre></p>
 
-Run Classification: Initiate the KNN algorithm to classify vectors from the "Test" file using the vectors from the "Train" file.  
-Review or Save Results: Choose to either review the classification results directly on-screen or save them as a local file for further analysis.  
-Exit: Whenever you're done using the program, exit gracefully by selecting the exit option.  
+3. Run Classification : Initiate the KNN algorithm to classify vectors from the "Test" file using the vectors from the "Train" file.  
+4. Review or Save Results : Choose to either review the classification results directly on-screen or save them as a local file for further analysis.  
+5. Exit : Whenever you're done using the program, exit gracefully by selecting the exit option.  
 
 
 ## How To Run  
@@ -58,45 +58,30 @@ Running the client:
 
 
 ## Implementation
-We will use a design pattern called `Command`, where each command in our program has its own class of type Command.  
-The `Command` class is abstract and can define anything relevant to all commands in our system,
-in particular an abstract execute function for activation.  
-This function will have to be implemented by all the successors, in our case - the various commands in the program.  
-In addition to each command there is a description string.  
-Further to what is said in the project description section, the CLI object holds a vector that contains all the commands, and a `DefaultIO` object.  
-We would like to disconnect the dependency between the command and the input/output source.  
-For this we defined the abstract type `DefaultIO` whose successors will have to implement the read and write methods in their own way.  
-That way, we can enter different implementations of DefaultIO at runtime to the Command.  
-Note that this implementation is also open to expansion. Because if we want, for example, to read and write to files, then we can add an implementation to `DefaultIO`.    
-That way all the commands will not have to change and will work exactly the same.  
-We used the `CLI` class to separation between the initiator of the command (invoker) and the one who is going to be
-enabled (receiver).  
-All communication between the server and the client will take place using the TCP protocol.  
+#### Program Design and Workflow
+We've implemented a Command design pattern for our program, where each command corresponds to a class inheriting from the abstract Command class. This allows us to maintain a clear structure for our system. The Command class itself is abstract and contains shared properties, primarily an abstract execute function responsible for executing specific command actions. Each specific command in our program implements this function based on its functionality. Furthermore, each command is associated with a description string.
 
-When a client connects to the server, the server will send the client a menu of the server's functions:   
-we used an array of `Command`, went through each `Command` and printed its description. When the user selects the i-th   command, we will go to the i-th position in the array of commands, and call its execute function. this command  
-in turn, will continue the interaction with the user as needed.  
-1. The user will be given the option to type a path to his local csv file on the computer,  
-and after pressing enter the client will send the contents of the file to the server.  
-If the classified or unclassified vectors have different lengths, an error message will be received.  
-In addition, if the path of the file is invalid, the message `invalid input` will be printed.  
-Otherwise, the server will send back the message `Upload complete` to the client.  
-2. The server will send the current classifier parameter values, which is the K parameter value
-and the current distance meter.  
-The user can leave the parameters unchanged by pressing `enter`, otherwise, the user can enter new values separated by space (according to the regular format).  
-Any input that does not meet the given format will receive an error message according to the error itself.  
-3. The server will run the algorithm of classification on the CSV files uploaded earlier.  
-If no files have been uploaded yet, the message `please upload data.` will be printed.  
-4. The server will return the list of classifications, and it will be printed on the screen.  
-If no files have been uploaded yet, or if the files have not been classified yet, an appropriate error message will be printed.  
-5. The user will enter a path to create the file locally and there the client will save the results.  
-If no files have been uploaded yet, or if the files have not been classified yet, an appropriate error message will be printed.  
-In order for the client to be able to send commands at the same time as receiving data from the server, we used parallelism.  
-In this way, the client can always send additional messages to the server and does not depend on the server's work rate.  
-8. The interaction between the server and the client will end.  
+#### Dependency Separation
+In addition to what's covered in the project description, the CLI (Command Line Interface) object contains a vector that holds all the commands and a DefaultIO object. To achieve a modular design and to separate the dependency between the command and the input/output source, we've defined an abstract type named DefaultIO. Its successors are required to implement the read and write methods, allowing us to input different implementations of DefaultIO at runtime for the Command. This design facilitates expansion; for instance, if we decide to read and write to files, we can add an implementation to DefaultIO without altering the commands.
 
-It's important to say that after each command (except for option 8), the main menu will appear immediately and the user will be able to send additional commands.   
-The server, in this case, continues to the next connection (the server does not close).  
+#### CLI and Interaction
+The CLI class serves as a bridge between the command initiator (invoker) and the entity being executed (receiver). All communication between the server and the client occurs using the TCP protocol.
+
+When a client connects to the server, the server transmits a menu of available functions to the client. We've employed an array of Command objects to achieve this. The server iterates through each Command, displaying its description. When a user selects a particular command, we navigate to the corresponding position in the array of commands and call its execute function. This command then proceeds to interact with the user as needed.
+
+#### File Upload and Classification
+Users are provided with the option to input a path to a local CSV file on their computers. Upon pressing enter, the client sends the file's contents to the server. If the lengths of classified and unclassified vectors differ, an error message is received. Similarly, an invalid path yields an "invalid input" message. Conversely, the server responds with "Upload complete" upon successful file transfer.
+
+The server transmits the current classifier parameter values (K and distance metric) to the user. Users can maintain the parameters by pressing enter or input new values separated by space. If the format is incorrect, the system prompts an appropriate error message. The server executes the classification algorithm on the uploaded CSV files. If no files have been uploaded yet, "please upload data" is displayed.
+
+#### Classification and Result Handling
+Upon classification, the server sends back a list of classifications, which is displayed on the screen. If files haven't been uploaded or classified, appropriate error messages are shown. Users enter a local file path to save results. Similar to previous cases, if no files have been uploaded or classified, relevant error messages are displayed.
+
+#### Parallelism for Seamless Interaction
+To allow clients to send commands simultaneously while receiving data from the server, we've implemented parallelism. This empowers clients to send additional messages to the server regardless of its processing rate.
+
+#### Continuous Interaction
+It's important to note that after executing each command (excluding option 8, which exits), the main menu promptly reappears, enabling users to send further commands. The server continuously handles connections and interactions without closing after each connection.
 
 ### Authors
 - [Roy Amit](https://github.com/royamit1)
