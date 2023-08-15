@@ -2,8 +2,8 @@
 
 ## Table of Contents
 * [Project Description](#project-description)
-* [How To Run](#how-to-run)
 * [Implementation](#implementation)
+* [How To Run](#how-to-run)
 * [Authors](#authors)
 
 ## Project Description
@@ -37,26 +37,6 @@ Each client is being presented with a menu with various commands which includes:
 4. Review or Save Results : Choose to either review the classification results directly on-screen or save them as a local file for further analysis.  
 5. Exit : Whenever you're done using the program, exit gracefully by selecting the exit option.  
 
-
-## How To Run  
-
-```bash
-# Clone this repository :
-$ git clone https://github.com/royamit1/KNN-Classifier-Server.git
-
-# Go into the repository :
-$ cd KNN-Classifier-Server
-
-# Compile using makefile :
-$ make
-```
-
-Running the server:  
-<pre><code>$ ./server.out &#60port&#62                       // For example: ./server.out 12345</code></pre>
-Running the client:  
-<pre><code>$ ./client.out &#60ip address&#62 &#60server port&#62   // For example: ./client.out 127.0.0.1 12345</code></pre>
-
-
 ## Implementation
 #### Program Design and Workflow
 We've implemented a Command design pattern for our program, where each command corresponds to a class inheriting from the abstract Command class. This allows us to maintain a clear structure for our system. The Command class itself is abstract and contains shared properties, primarily an abstract execute function responsible for executing specific command actions. Each specific command in our program implements this function based on its functionality. Furthermore, each command is associated with a description string.
@@ -82,6 +62,26 @@ To allow clients to send commands simultaneously while receiving data from the s
 
 #### Continuous Interaction
 It's important to note that after executing each command (excluding option 8, which exits), the main menu promptly reappears, enabling users to send further commands. The server continuously handles connections and interactions without closing after each connection.
+
+## How To Run  
+
+```bash
+# Clone this repository :
+$ git clone https://github.com/royamit1/KNN-Classifier-Server.git
+
+# Go into the repository :
+$ cd KNN-Classifier-Server
+
+# Compile using makefile :
+$ make
+```
+
+Running the server:  
+<pre><code>$ ./server.out &#60port&#62                       // For example: ./server.out 12345</code></pre>
+Running the client:  
+<pre><code>$ ./client.out &#60ip address&#62 &#60server port&#62   // For example: ./client.out 127.0.0.1 12345</code></pre>
+
+
 
 ### Authors
 - [Roy Amit](https://github.com/royamit1)
